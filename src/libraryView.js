@@ -35,7 +35,7 @@ const libraryCard = card => {
       <p>${card.playerText}</p>
       ${card.quickStats.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
       ${abilityRow}${actionButtons}
-      ${card.dmText ? `<details><summary>View private DM side</summary><p>${card.dmText}</p></details>` : ""}
+      ${card.dmText ? `<details><summary>${card.kind === "wild-shape" ? "Full beast rules" : "View private DM side"}</summary><p>${card.dmText}</p></details>` : ""}
     </div>
   </article>`;
 };
