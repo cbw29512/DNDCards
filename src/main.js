@@ -2,6 +2,7 @@ import { allCards } from "./data.js";
 import { dmView, libraryCards } from "./dmView.js";
 import { rollInitiative, finishTurn } from "./initiative.js";
 import { initiativeView } from "./initiativeView.js";
+import { landingView } from "./landingView.js";
 import { lobbyView } from "./lobbyView.js";
 import { playerView } from "./playerView.js";
 import { printView } from "./printView.js";
@@ -13,10 +14,15 @@ const root = document.querySelector("#app");
 
 const render = () => {
   try {
+    if (state.screen !== "table") {
+      root.innerHTML = landingView(state.lastError);
+      return;
+    }
     root.innerHTML = `<header class="hero"><a class="brand" href="#"><span>DC</span><div><b>DUNGEON CARDS</b><small>Build it. Reveal it. Play it.</small></div></a>
       <nav><button data-action="mode" data-id="dm" class="${state.mode === "dm" ? "active" : ""}">DM table</button>
       <button data-action="mode" data-id="player" class="${state.mode === "player" ? "active" : ""}">Player table</button>
-      <button data-action="print" data-id="duplex">Print duplex</button><button data-action="print" data-id="home">Home sheets</button></nav></header>
+      <button data-action="print" data-id="duplex">Print duplex</button><button data-action="print" data-id="home">Home sheets</button>
+      <button data-action="logout">Log out</button></nav></header>
       <section class="adventure-title"><small>OFFICIAL STARTER ADVENTURE · LEVEL 3</small><h1>The Hearthglow Wish</h1>
       <p>A cozy birthday mystery played entirely from cards.</p></section>
       ${initiativeView(state)}${lobbyView(state)}${state.mode === "dm" ? dmView(state) : playerView(state)}${printView(state)}`;
@@ -45,6 +51,17 @@ root.addEventListener("click", event => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (action === "choose-login") {
+      const dialog = document.querySelector("#login-dialog");
+      const player = id === "player";
+      dialog.querySelector("#login-role").value = id;
+      dialog.querySelector("#login-title").textContent = player ? "Player login" : "Dungeon Master login";
+      dialog.querySelector("#login-help").textContent = player ? "Enter the code supplied by your DM." : "Open your private adventure-building table.";
+      dialog.querySelector("#code-field").hidden = !player;
+      dialog.querySelector("#login-submit").textContent = player ? "Join player table" : "Open DM table";
+      return dialog.showModal();
+    }
+    if (action === "close-login") return button.closest("dialog").close();
     if (action === "open-library") return openLibrary(id);
     if (action === "close-library") {
       libraryKind = null;
@@ -73,6 +90,16 @@ root.addEventListener("click", event => {
 
 root.addEventListener("submit", event => {
   try {
+    if (event.target.id === "login-form") {
+      event.preventDefault();
+      const form = new FormData(event.target);
+      const role = String(form.get("role"));
+      return dispatch({
+        type: role === "player" ? "login-player" : "login-dm",
+        name: String(form.get("name") || ""),
+        code: String(form.get("code") || "")
+      });
+    }
     if (event.target.id !== "join-form") return;
     event.preventDefault();
     const name = new FormData(event.target).get("name");

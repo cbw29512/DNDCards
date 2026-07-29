@@ -7,7 +7,7 @@ const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`,
 export const loadState = () => {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-    const state = saved || createState();
+    const state = { ...createState(), ...(saved || {}) };
     for (const room of rooms) {
       state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
     }
@@ -29,6 +29,25 @@ export const saveState = state => {
 export const updateState = (state, action) => {
   try {
     const next = structuredClone(state);
+    next.lastError = null;
+    if (action.type === "login-dm") {
+      next.screen = "table";
+      next.mode = "dm";
+      next.identity = { role: "dm", name: action.name.trim() };
+    }
+    if (action.type === "login-player") {
+      if (action.code.trim().toUpperCase() !== next.sessionCode) throw new Error("The table code does not match.");
+      const id = `player-${Date.now()}`;
+      next.players.push({ id, name: action.name.trim(), characterId: null, backpackIds: [] });
+      next.activePlayerId = id;
+      next.screen = "table";
+      next.mode = "player";
+      next.identity = { role: "player", name: action.name.trim(), playerId: id };
+    }
+    if (action.type === "logout") {
+      next.screen = "landing";
+      next.identity = null;
+    }
     if (action.type === "mode") next.mode = action.value;
     if (action.type === "room") {
       next.roomId = action.id;
@@ -63,7 +82,7 @@ export const updateState = (state, action) => {
     return next;
   } catch (error) {
     logError(`Action "${action.type}" failed.`, error);
-    return state;
+    return { ...state, lastError: error instanceof Error ? error.message : "The action could not be completed." };
   }
 };
 
