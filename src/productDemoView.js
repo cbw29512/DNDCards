@@ -1,3 +1,5 @@
+import { symbolCardView } from "./symbolCardView.js";
+
 export const productDemoView = () => `
   <section class="product-proof">
     <header><small>DON'T JUST READ ABOUT IT</small><h2>See the system you are buying.</h2>
@@ -37,6 +39,7 @@ export const productDemoView = () => `
           <section><h4>➶ BERRY SPLAT · RECHARGE 5–6</h4><p>Range 30 ft. · DC 12 Dexterity · <b>2d6</b> acid; target's speed is reduced by 10 ft. until its next turn.</p></section>
           <footer><b>TACTIC</b> Splat the fastest hero, then hide behind furniture.<br><b>MORALE</b> Below 6 ♥, it surrenders for fresh toast.</footer>
         </article>
+        ${symbolCardView("symbol-card--showcase")}
       </div>
     </div>
   </section>`;

@@ -7,6 +7,7 @@ import { lobbyView } from "./lobbyView.js";
 import { playerView } from "./playerView.js";
 import { printView } from "./printView.js";
 import { loadState, saveState, updateState } from "./state.js";
+import { symbolCardView } from "./symbolCardView.js";
 
 let state = loadState();
 let libraryKind = null;
@@ -21,11 +22,14 @@ const render = () => {
     root.innerHTML = `<header class="hero"><a class="brand" href="#"><span>DC</span><div><b>DUNGEON CARDS</b><small>Build it. Reveal it. Play it.</small></div></a>
       <nav><button data-action="mode" data-id="dm" class="${state.mode === "dm" ? "active" : ""}">DM table</button>
       <button data-action="mode" data-id="player" class="${state.mode === "player" ? "active" : ""}">Player table</button>
+      <button data-action="symbols">Symbol key</button>
       <button data-action="print" data-id="duplex">Print duplex</button><button data-action="print" data-id="home">Home sheets</button>
       <button data-action="logout">Log out</button></nav></header>
       <section class="adventure-title"><small>OFFICIAL STARTER ADVENTURE · LEVEL 3</small><h1>The Hearthglow Wish</h1>
       <p>A cozy birthday mystery played entirely from cards.</p></section>
-      ${initiativeView(state)}${lobbyView(state)}${state.mode === "dm" ? dmView(state) : playerView(state)}${printView(state)}`;
+      ${initiativeView(state)}${lobbyView(state)}${state.mode === "dm" ? dmView(state) : playerView(state)}
+      <dialog id="symbol-dialog" class="symbol-dialog"><button data-action="close-symbols" class="dialog-close" aria-label="Close">×</button>${symbolCardView()}</dialog>
+      ${printView(state)}`;
     if (libraryKind) openLibrary(libraryKind);
   } catch (error) {
     console.error("[Dungeon Cards] Interface render failed.", error);
@@ -51,6 +55,8 @@ root.addEventListener("click", event => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (action === "symbols") return document.querySelector("#symbol-dialog").showModal();
+    if (action === "close-symbols") return button.closest("dialog").close();
     if (action === "choose-login") {
       const dialog = document.querySelector("#login-dialog");
       const player = id === "player";

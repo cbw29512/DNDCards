@@ -1,10 +1,11 @@
 import { allCards, rooms } from "./data.js";
 import { cardView } from "./cardView.js";
+import { symbolCardView } from "./symbolCardView.js";
 
 export const printView = state => `
   <section class="print-pack">
     <header><small>COMPLETE PLAYABLE PACK</small><h1>The Hearthglow Wish</h1></header>
-    <div class="print-grid">${rooms.flatMap(room =>
+    <div class="print-grid">${symbolCardView("symbol-card--print")}${rooms.flatMap(room =>
       (state.placedByRoom[room.id] || []).map(id => {
         const card = allCards.find(card => card.id === id);
         return card ? `<div class="print-pair">${cardView(card)}
