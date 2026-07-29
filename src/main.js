@@ -9,6 +9,9 @@ import { playerView } from "./playerView.js";
 import { printView } from "./printView.js";
 import { loadState, saveState, updateState } from "./state.js";
 import { symbolCardView } from "./symbolCardView.js";
+import { executeCardAction } from "./diceEngine.js";
+import { findCard } from "./state.js";
+import { rollResultView } from "./rollResultView.js";
 
 let state = loadState();
 let libraryKind = null;
@@ -36,7 +39,7 @@ const render = () => {
       <p>A cozy birthday mystery played entirely from cards.</p></section>
       ${initiativeView(state)}${lobbyView(state)}${state.mode === "dm" ? dmView(state) : playerView(state)}
       <dialog id="symbol-dialog" class="symbol-dialog"><button data-action="close-symbols" class="dialog-close" aria-label="Close">×</button>${symbolCardView()}</dialog>
-      ${printView(state)}`;
+      ${rollResultView(state)}${printView(state)}`;
     if (libraryKind) openLibrary(libraryKind);
   } catch (error) {
     console.error("[Dungeon Cards] Interface render failed.", error);
@@ -62,6 +65,20 @@ root.addEventListener("click", event => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (action === "roll-card-action") {
+      const card = findCard(button.dataset.cardId);
+      const result = executeCardAction(card, id);
+      state.lastRoll = result;
+      state.rollHistory = [result, ...state.rollHistory].slice(0, 10);
+      if (result.action.cost && !state.usedResources.includes(result.action.cost)) state.usedResources.push(result.action.cost);
+      saveState(state);
+      return render();
+    }
+    if (action === "close-roll") {
+      state.lastRoll = null; saveState(state); return render();
+    }
+    if (action === "adjust-health") return dispatch({ type:"adjust-health", id, amount:Number(button.dataset.amount) });
+    if (action === "rest") return dispatch({ type:"rest", restType:id });
     if (action === "open-card-library") {
       state.screen = "library"; saveState(state); return render();
     }

@@ -5,8 +5,8 @@ export const rooms = [
   { id: "shop", number: 4, title: "Candlewick Curios" }
 ];
 
-const card = (id, kind, title, room, playerText, dmText, stats = []) =>
-  ({ id, kind, title, room, playerText, dmText, stats });
+const card = (id, kind, title, room, playerText, dmText, stats = [], combat = {}) =>
+  ({ id, kind, title, room, playerText, dmText, stats, ...combat });
 
 export const cards = [
   card("room-square", "room", "Hearthglow Square", "square",
@@ -17,10 +17,18 @@ export const cards = [
     "Keep Wendy central. She knows kindness—not force—restores the final wish."),
   card("monster-gremlin", "monster", "Jam Gremlin", "inn",
     "A jam-smeared creature springs from the pantry with a spoon held like a sword.",
-    "Two gremlins act as one initiative group.", ["♥ 18", "🛡 13", "⚔ Spoon +4 · 1d6+2"]),
+    "Two gremlins act as one initiative group.", ["♥ 18", "🛡 13", "⚔ Spoon +4 · 1d6+2"], {
+      initiative: 2, abilities: [8,15,12,10,11,14],
+      actions: [
+        { id:"spoon", label:"Spoon Swipe", icon:"⚔", kind:"attack", roll:"1d20+4", damage:"1d6+2", range:"5 ft.", cost:"Action" },
+        { id:"splat", label:"Berry Splat", icon:"➶", kind:"effect", damage:"2d6", save:{ ability:"Dexterity", dc:12 }, range:"30 ft.", effect:"Speed −10 ft. until next turn.", cost:"Action" }
+      ]
+    }),
   card("trap-candles", "trap", "Candle-Snuffer Trap", "chapel",
     "A cold breath circles the candles. Their flames bend toward the dark.",
-    "DC 13 Perception. A birthday memory spoken aloud disarms it.", ["DC 13", "Effect: lights extinguish"]),
+    "DC 13 Perception. A birthday memory spoken aloud disarms it.", ["DC 13", "Effect: lights extinguish"], {
+      actions: [{ id:"snuff", label:"Trigger Trap", icon:"⬡", kind:"effect", damage:"1d6", save:{ ability:"Dexterity", dc:13 }, range:"Room", effect:"Lights extinguish.", cost:"Free/interact" }]
+    }),
   card("treasure-charm", "treasure", "Wishkeeper Charm", "chapel",
     "A tiny golden cake charm warms in your palm.",
     "A player may reroll one failed saving throw.", ["1 use", "Tradeable"]),
@@ -40,11 +48,29 @@ export const cards = [
 
 export const characters = [
   card("pc-wendy", "character", "Wendy the Wishkeeper", null,
-    "A warm-hearted hero who protects every shared wish.", "", ["♥ 32", "🛡 15", "Initiative +3"]),
+    "A warm-hearted hero who protects every shared wish.", "", ["♥ 32", "🛡 15", "Initiative +3"], {
+      initiative:3, abilities:[10,16,14,12,14,16],
+      actions:[
+        { id:"staff", label:"Candle Staff", icon:"⚔", kind:"attack", roll:"1d20+5", damage:"1d6+3", range:"5 ft.", cost:"Action" },
+        { id:"wis-save", label:"Wisdom Save", icon:"◈", kind:"save", roll:"1d20+4", effect:"Wisdom saving throw." }
+      ]
+    }),
   card("pc-bob", "character", "Bob the Brave", null,
-    "A cheerful barbarian who treats every challenge like a party game.", "", ["♥ 44", "🛡 14", "Initiative +2"]),
+    "A cheerful barbarian who treats every challenge like a party game.", "", ["♥ 44", "🛡 14", "Initiative +2"], {
+      initiative:2, abilities:[17,14,16,8,12,10],
+      actions:[
+        { id:"axe", label:"Greataxe", icon:"⚔", kind:"attack", roll:"1d20+5", damage:"1d12+3", range:"5 ft.", cost:"Action" },
+        { id:"str-save", label:"Strength Save", icon:"◈", kind:"save", roll:"1d20+5", effect:"Strength saving throw." }
+      ]
+    }),
   card("pc-lumi", "character", "Lumi Candlelight", null,
-    "A quick-witted mage whose sparks smell faintly of vanilla.", "", ["♥ 26", "🛡 13", "Initiative +4"])
+    "A quick-witted mage whose sparks smell faintly of vanilla.", "", ["♥ 26", "🛡 13", "Initiative +4"], {
+      initiative:4, abilities:[8,18,12,16,13,10],
+      actions:[
+        { id:"spark", label:"Vanilla Spark", icon:"✦", kind:"attack", roll:"1d20+5", damage:"1d10", range:"120 ft.", cost:"Action" },
+        { id:"burst", label:"Candle Burst", icon:"✦", kind:"effect", damage:"2d6", save:{ ability:"Dexterity", dc:13 }, range:"15-ft. cone", effect:"Half damage on success.", cost:"Action" }
+      ]
+    })
 ];
 
 export const events = Array.from({ length: 10 }, (_, index) =>

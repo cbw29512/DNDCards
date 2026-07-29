@@ -17,7 +17,7 @@ export const dmView = state => {
         return `<section class="slot"><header><div><small>${kind} SLOT</small><h2>${kind}</h2></div>
           <button data-action="open-library" data-id="${kind}">+</button></header>
           <div class="card-row">${slotCards.length ? slotCards.map(card => `
-            <div>${cardView(card, { dm: true, action: "reveal", label: state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal player face" })}
+            <div>${cardView(card, { dm: true, health: state.healthByCard[card.id], action: "reveal", label: state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal player face" })}
             <button class="remove" data-action="remove" data-id="${card.id}">Remove</button></div>`).join("") : emptyView(`Add a ${kind} card`)}</div>
         </section>`;
       }).join("")}

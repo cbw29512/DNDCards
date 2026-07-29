@@ -1,6 +1,7 @@
 /**
  * Runtime schema
- * Card: { id, kind, title, room, playerText, dmText, stats[] }
+ * Card actions use structured dice data:
+ * { id, label, icon, kind, roll?, damage?, save?, range?, effect?, cost? }
  * Player: { id, name, characterId, backpackIds[] }
  * State: private DM board + shared reveals + per-player collections.
  */
@@ -22,5 +23,8 @@ export const createState = () => ({
   activeTurn: 0,
   round: 0,
   usedResources: [],
-  activeEventId: null
+  activeEventId: null,
+  healthByCard: {},
+  lastRoll: null,
+  rollHistory: []
 });

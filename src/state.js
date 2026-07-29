@@ -11,6 +11,11 @@ export const loadState = () => {
     for (const room of rooms) {
       state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
     }
+    state.healthByCard ||= {};
+    for (const card of allCards) {
+      const maximum = Number(card.stats?.find(stat => stat.startsWith("♥"))?.match(/\d+/)?.[0]);
+      if (maximum && !state.healthByCard[card.id]) state.healthByCard[card.id] = { current: maximum, maximum };
+    }
     return state;
   } catch (error) {
     logError("Could not load the table; a fresh table was created.", error);
@@ -78,6 +83,20 @@ export const updateState = (state, action) => {
       if (player && !next.players.some(other => other.characterId === action.id)) player.characterId = action.id;
     }
     if (action.type === "event") next.activeEventId = `event-${Math.floor(Math.random() * 10) + 1}`;
+    if (action.type === "adjust-health") {
+      const health = next.healthByCard[action.id];
+      if (!health) throw new Error("This card does not track health.");
+      health.current = Math.max(0, Math.min(health.maximum, health.current + action.amount));
+    }
+    if (action.type === "rest") {
+      next.usedResources = [];
+      if (action.restType === "long") {
+        for (const card of allCards.filter(candidate => candidate.kind === "character")) {
+          const health = next.healthByCard[card.id];
+          if (health) health.current = health.maximum;
+        }
+      }
+    }
     saveState(next);
     return next;
   } catch (error) {
