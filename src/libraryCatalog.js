@@ -1,3 +1,5 @@
+import { wildShapeCatalog } from "./wildShapeCatalog.js";
+
 const c = (id, kind, title, roomNumber, badge, playerText, dmText = "", quickStats = []) => ({
   id, kind, title, roomNumber, badge, playerText, dmText, quickStats,
   source: "The First Chime of Hearthglow"
@@ -42,5 +44,6 @@ export const rawLibraryCatalog = [
     ["08","The Doors Lock","The inn doors slam shut as a loop of bell rope drops from the rafters.","Place and reveal TRAP-002, the Falling Bell-Rope Snare."],
     ["09","The Forbidden Tunnel","Brindle remembers a service tunnel beneath the cellar leading toward the foundry district.","This creates a safe shortcut to Room 6."],
     ["10","The Truth Bell Cracks","The truth bell cracks and releases a wave of silver light.","Everyone may reroll one failed social or investigation check made in the inn."]
-  ].map(([number,title,playerText,dmText]) => c(`EVENT-${number}`,"event",title,2,`Inn event ${Number(number)}`,playerText,dmText))
+  ].map(([number,title,playerText,dmText]) => c(`EVENT-${number}`,"event",title,2,`Inn event ${Number(number)}`,playerText,dmText)),
+  ...wildShapeCatalog
 ];

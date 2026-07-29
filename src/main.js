@@ -12,6 +12,7 @@ import { symbolCardView } from "./symbolCardView.js";
 import { executeCardAction } from "./diceEngine.js";
 import { findCard } from "./state.js";
 import { rollResultView } from "./rollResultView.js";
+import { library } from "./libraryModel.js";
 
 let state = loadState();
 let libraryKind = null;
@@ -66,7 +67,9 @@ root.addEventListener("click", event => {
     if (!button) return;
     const { action, id } = button.dataset;
     if (action === "roll-card-action") {
-      const card = findCard(button.dataset.cardId);
+      const card = findCard(button.dataset.cardId)
+        || library.cards.find(candidate => candidate.id === button.dataset.cardId);
+      if (!card) throw new Error(`Card ${button.dataset.cardId} was not found.`);
       const result = executeCardAction(card, id);
       state.lastRoll = result;
       state.rollHistory = [result, ...state.rollHistory].slice(0, 10);

@@ -2,7 +2,7 @@ import { LIBRARY_KINDS, library } from "../src/libraryModel.js";
 
 try {
   if (library.rejected.length) throw new Error(`${library.rejected.length} catalog records were rejected.`);
-  if (library.cards.length !== 37) throw new Error(`Expected 37 unique cards; found ${library.cards.length}.`);
+  if (library.cards.length !== 98) throw new Error(`Expected 98 unique cards; found ${library.cards.length}.`);
   const missing = LIBRARY_KINDS.filter(kind =>
     kind !== "all" && !library.cards.some(card => card.kind === kind));
   if (missing.length) throw new Error(`Empty required categories: ${missing.join(", ")}`);
