@@ -3,6 +3,7 @@ import { dmView, libraryCards } from "./dmView.js";
 import { rollInitiative, finishTurn } from "./initiative.js";
 import { initiativeView } from "./initiativeView.js";
 import { landingView } from "./landingView.js";
+import { libraryView } from "./libraryView.js";
 import { lobbyView } from "./lobbyView.js";
 import { playerView } from "./playerView.js";
 import { printView } from "./printView.js";
@@ -11,10 +12,16 @@ import { symbolCardView } from "./symbolCardView.js";
 
 let state = loadState();
 let libraryKind = null;
+let catalogKind = "all";
+let catalogQuery = "";
 const root = document.querySelector("#app");
 
 const render = () => {
   try {
+    if (state.screen === "library") {
+      root.innerHTML = libraryView(catalogQuery, catalogKind);
+      return;
+    }
     if (state.screen !== "table") {
       root.innerHTML = landingView(state.lastError);
       return;
@@ -55,6 +62,15 @@ root.addEventListener("click", event => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (action === "open-card-library") {
+      state.screen = "library"; saveState(state); return render();
+    }
+    if (action === "close-card-library") {
+      state.screen = "landing"; saveState(state); return render();
+    }
+    if (action === "filter-cards") {
+      catalogKind = id; return render();
+    }
     if (action === "symbols") return document.querySelector("#symbol-dialog").showModal();
     if (action === "close-symbols") return button.closest("dialog").close();
     if (action === "choose-login") {
@@ -112,6 +128,19 @@ root.addEventListener("submit", event => {
     if (String(name).trim()) dispatch({ type: "join", name: String(name) });
   } catch (error) {
     console.error("[Dungeon Cards] Player could not join.", error);
+  }
+});
+
+root.addEventListener("input", event => {
+  try {
+    if (event.target.id !== "card-search") return;
+    catalogQuery = event.target.value;
+    render();
+    const search = document.querySelector("#card-search");
+    search?.focus();
+    search?.setSelectionRange(catalogQuery.length, catalogQuery.length);
+  } catch (error) {
+    console.error("[Dungeon Cards] Card search failed.", error);
   }
 });
 

@@ -5,7 +5,7 @@ export const landingView = error => `
   <main class="landing">
     <nav class="landing-nav">
       <a class="brand" href="#"><span>DC</span><div><b>DUNGEON CARDS</b><small>BUILD IT · REVEAL IT · PLAY IT</small></div></a>
-      <div><a href="#how-it-works">How it works</a><a href="#symbol-key">Symbol key</a><a href="#adventure-packs">Adventure packs</a><a href="#homebrew">Homebrew</a></div>
+      <div><button data-action="open-card-library">Card library</button><a href="#how-it-works">How it works</a><a href="#symbol-key">Symbol key</a><a href="#adventure-packs">Adventure packs</a><a href="#homebrew">Homebrew</a></div>
     </nav>
     <section class="landing-hero">
       <div class="landing-copy">
@@ -15,6 +15,7 @@ export const landingView = error => `
         <div class="landing-actions">
           <button data-action="choose-login" data-id="dm">Enter as Dungeon Master</button>
           <button class="secondary" data-action="choose-login" data-id="player">Join as Player</button>
+          <button class="secondary" data-action="open-card-library">Browse the card library</button>
         </div>
       </div>
       <div class="hero-deck" aria-label="Example adventure card deck">
