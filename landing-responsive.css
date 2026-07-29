@@ -1,0 +1,12 @@
+@media (max-width: 800px) {
+  .symbol-key-feature {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 3rem;
+  }
+
+  .symbol-card--landing {
+    margin: 0.5rem;
+    transform: none;
+  }
+}

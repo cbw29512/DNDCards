@@ -1,10 +1,11 @@
 import { productDemoView } from "./productDemoView.js";
+import { symbolCardView } from "./symbolCardView.js";
 
 export const landingView = error => `
   <main class="landing">
     <nav class="landing-nav">
       <a class="brand" href="#"><span>DC</span><div><b>DUNGEON CARDS</b><small>BUILD IT · REVEAL IT · PLAY IT</small></div></a>
-      <div><a href="#how-it-works">How it works</a><a href="#adventure-packs">Adventure packs</a><a href="#homebrew">Homebrew</a></div>
+      <div><a href="#how-it-works">How it works</a><a href="#symbol-key">Symbol key</a><a href="#adventure-packs">Adventure packs</a><a href="#homebrew">Homebrew</a></div>
     </nav>
     <section class="landing-hero">
       <div class="landing-copy">
@@ -20,6 +21,16 @@ export const landingView = error => `
         <article><small>ROOM CARD</small><b>The Heartbreak Inn</b><span>Set the scene</span></article>
         <article><small>MONSTER CARD</small><b>Jam Gremlin</b><span>Reveal the threat</span></article>
         <article><small>TREASURE CARD</small><b>Wishkeeper Charm</b><span>Claim the reward</span></article>
+      </div>
+    </section>
+    <section class="symbol-key-feature" id="symbol-key">
+      <div class="symbol-key-card-stage"><span>PACK CARD 01</span>${symbolCardView("symbol-card--landing")}</div>
+      <div class="symbol-key-copy">
+        <small>INCLUDED IN EVERY DUNGEON CARDS PACK</small>
+        <h2>The first card teaches you how to read every other card.</h2>
+        <p>Every official adventure, expansion deck, physical order, digital purchase, and print-at-home package includes the Symbol Key. Keep it on the table so new players and experienced DMs can understand the system without searching through rules.</p>
+        <div class="included-formats"><span>✓ Physical decks</span><span>✓ Digital packs</span><span>✓ Print-at-home</span><span>✓ Starter adventures</span></div>
+        <p class="symbol-key-note"><b>DM and player reference:</b> health, armor, speed, melee, ranged, spells, DCs, dice, recharge, reactions, short rests, and long rests are explained on one playing-card-sized reference.</p>
       </div>
     </section>
     ${productDemoView()}
