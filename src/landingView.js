@@ -1,3 +1,5 @@
+import { productDemoView } from "./productDemoView.js";
+
 export const landingView = error => `
   <main class="landing">
     <nav class="landing-nav">
@@ -20,6 +22,7 @@ export const landingView = error => `
         <article><small>TREASURE CARD</small><b>Wishkeeper Charm</b><span>Claim the reward</span></article>
       </div>
     </section>
+    ${productDemoView()}
     <section class="how" id="how-it-works">
       <small>ONE SYSTEM · EVERY ADVENTURE</small><h2>Draw the next piece of the story.</h2>
       <div><article><b>1</b><h3>Build</h3><p>The DM assembles rooms from reusable cards.</p></article>
