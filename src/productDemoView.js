@@ -20,9 +20,9 @@ export const productDemoView = () => `
       </main>
     </div>
     <div class="example-card-section">
-      <div class="example-copy"><small>ONE CARD · BOTH SIDES OF PLAY</small><h2>A complete monster, ready to reveal and run.</h2>
+      <div class="example-copy"><small>THE COMPLETE CARD SYSTEM</small><h2>Monster front, DM back, and the Symbol Key.</h2>
         <p>The illustrated front gives players something memorable to react to. The private back gives the DM everything needed for the creature's turn without opening another book.</p>
-        <ul><li>Room number connects every encounter card to the quest.</li><li>Large icons make health, armor, movement, attacks, and damage scannable.</li><li>Clickable actions roll automatically online; printed cards use real dice.</li><li>Complex monsters expand into ordered accordion cards, with spells on the final card.</li></ul>
+        <ul><li>Room number connects every encounter card to the quest.</li><li>The included Symbol Key explains every icon at a glance.</li><li>Clickable actions roll automatically online; printed cards use real dice.</li><li>Complex monsters expand into ordered accordion cards, with spells on the final card.</li></ul>
       </div>
       <div class="example-cards">
         <article class="showcase-card card-front">
@@ -39,7 +39,7 @@ export const productDemoView = () => `
           <section><h4>➶ BERRY SPLAT · RECHARGE 5–6</h4><p>Range 30 ft. · DC 12 Dexterity · <b>2d6</b> acid; target's speed is reduced by 10 ft. until its next turn.</p></section>
           <footer><b>TACTIC</b> Splat the fastest hero, then hide behind furniture.<br><b>MORALE</b> Below 6 ♥, it surrenders for fresh toast.</footer>
         </article>
-        ${symbolCardView("symbol-card--showcase")}
+        <div class="symbol-showcase-wrap"><strong>INCLUDED IN EVERY ADVENTURE PACK</strong>${symbolCardView("symbol-card--showcase")}</div>
       </div>
     </div>
   </section>`;
