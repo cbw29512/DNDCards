@@ -1,36 +1,10 @@
-import { allCards, cards, rooms } from "./data.js";
-import { createState } from "./schema.js";
+import { allCards, cards } from "./data.js";
 import { findAdventure } from "./adventures.js";
+import { updateEquipmentState } from "./equipmentState.js";
+import { loadState, saveState } from "./stateStorage.js";
 
-const STORAGE_KEY = "dungeon-cards-standalone-v1";
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
-
-export const loadState = () => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-    const state = { ...createState(), ...(saved || {}) };
-    for (const room of rooms) {
-      state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
-    }
-    state.healthByCard ||= {};
-    for (const card of allCards) {
-      const maximum = Number(card.stats?.find(stat => stat.startsWith("♥"))?.match(/\d+/)?.[0]);
-      if (maximum && !state.healthByCard[card.id]) state.healthByCard[card.id] = { current: maximum, maximum };
-    }
-    return state;
-  } catch (error) {
-    logError("Could not load the table; a fresh table was created.", error);
-    return createState();
-  }
-};
-
-export const saveState = state => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch (error) {
-    logError("Could not save the table.", error);
-  }
-};
+export { loadState, saveState };
 
 export const updateState = (state, action) => {
   try {
@@ -39,6 +13,7 @@ export const updateState = (state, action) => {
     if (action.type === "login-dm") {
       next.screen = "table";
       next.mode = "dm";
+      next.tableTab = next.adventureId ? "board" : "adventure";
       next.identity = { role: "dm", name: action.name.trim() };
     }
     if (action.type === "login-player") {
@@ -48,6 +23,7 @@ export const updateState = (state, action) => {
       next.activePlayerId = id;
       next.screen = "table";
       next.mode = "player";
+      next.tableTab = "board";
       next.identity = { role: "player", name: action.name.trim(), playerId: id };
     }
     if (action.type === "logout") {
@@ -60,6 +36,7 @@ export const updateState = (state, action) => {
       }
       next.mode = action.value;
     }
+    if (action.type === "table-tab") next.tableTab = action.id;
     if (action.type === "load-adventure") {
       const adventure = findAdventure(action.id);
       if (!adventure) throw new Error("That adventure pack could not be found.");
@@ -72,6 +49,7 @@ export const updateState = (state, action) => {
       }
       next.revealedIds = [];
       next.activeEventId = null;
+      next.tableTab = "board";
     }
     if (action.type === "next-room" || action.type === "previous-room") {
       const adventure = findAdventure(next.adventureId);
@@ -116,12 +94,19 @@ export const updateState = (state, action) => {
       const id = `player-${Date.now()}`;
       next.players.push({ id, name: action.name.trim(), characterId: null, backpackIds: [] });
       next.activePlayerId = id;
+      next.equipmentByPlayer[id] = {};
+      next.pendingItemsByPlayer[id] = [];
     }
     if (action.type === "select-player") next.activePlayerId = action.id;
     if (action.type === "claim") {
       const player = next.players.find(player => player.id === next.activePlayerId);
-      if (player && !next.players.some(other => other.characterId === action.id)) player.characterId = action.id;
+      if (player && !next.players.some(other => other.characterId === action.id)) {
+        player.characterId = action.id;
+        next.equipmentByPlayer[player.id] ||= {};
+        next.pendingItemsByPlayer[player.id] ||= [];
+      }
     }
+    updateEquipmentState(next, action, allCards);
     if (action.type === "event") next.activeEventId = `event-${Math.floor(Math.random() * 10) + 1}`;
     if (action.type === "adjust-health") {
       const health = next.healthByCard[action.id];

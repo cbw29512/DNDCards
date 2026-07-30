@@ -13,8 +13,8 @@ export const tableHeaderView = state => {
       <strong>${state.identity?.name || (isDm ? "Game Master" : "Player")}</strong></div>
     </div>
     <nav aria-label="Game controls">
-      ${isDm ? `<button data-action="mode" data-id="dm" class="${state.mode === "dm" ? "active" : ""}">⚒ Build</button>
-        <button data-action="mode" data-id="player" class="${state.mode === "player" ? "active" : ""}">◉ Player preview</button>` : ""}
+      ${isDm ? `<button data-action="table-tab" data-id="adventure" class="${state.tableTab === "adventure" ? "active" : ""}">⚒ Adventure</button>` : ""}
+      <button data-action="table-tab" data-id="board" class="${state.tableTab === "board" ? "active" : ""}">⚔ Game Board</button>
       <button data-action="symbols">? Rules key</button>
       ${isDm ? `<button data-action="print" data-id="home">▤ Print</button>` : ""}
       <button data-action="logout">↩ Exit</button>

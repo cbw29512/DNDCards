@@ -6,6 +6,11 @@
  * State: private DM board + shared reveals + per-player collections.
  */
 export const SLOT_KINDS = ["room", "npc", "monster", "trap", "treasure", "clue"];
+export const BOARD_KINDS = ["room", "monster", "trap", "treasure"];
+export const EQUIPMENT_SLOTS = [
+  "head", "neck", "armor", "back", "mainHand", "offHand",
+  "hands", "waist", "feet", "ring1", "ring2"
+];
 export const TURN_RESOURCES = ["Movement", "Action", "Bonus action", "Free/interact", "Reaction"];
 
 export const createState = () => ({
@@ -13,6 +18,7 @@ export const createState = () => ({
   identity: null,
   lastError: null,
   mode: "dm",
+  tableTab: "adventure",
   adventureId: null,
   adventureComplete: false,
   completedRoomIds: [],
@@ -22,6 +28,8 @@ export const createState = () => ({
   revealedIds: [],
   players: [],
   activePlayerId: null,
+  equipmentByPlayer: {},
+  pendingItemsByPlayer: {},
   initiative: [],
   activeTurn: 0,
   round: 0,

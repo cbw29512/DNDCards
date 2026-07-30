@@ -32,6 +32,20 @@ export const cards = [
   card("treasure-charm", "treasure", "Wishkeeper Charm", "chapel",
     "A tiny golden cake charm warms in your palm.",
     "A player may reroll one failed saving throw.", ["1 use", "Tradeable"]),
+  card("treasure-emberblade", "treasure", "Emberblade +1", "shop",
+    "A bright steel sword glows like a candle flame without giving off smoke.",
+    "A homebrew demonstration item. Equip it in one hand to unlock its attack.", ["⚔ +1", "1d8 slashing", "1d4 fire"], {
+      equipSlots:["mainHand", "offHand"],
+      modifiers:[],
+      actions:[{
+        id:"ember-slash", label:"Ember Slash", icon:"⚔", kind:"equippedAttack",
+        attackType:"melee", ability:"strength", proficiency:true, attackBonus:1, range:"5 ft.",
+        damageComponents:[
+          { label:"Sword", icon:"⚔", formula:"1d8", ability:"strength", flatBonus:1, damageType:"slashing" },
+          { label:"Flame", icon:"🔥", formula:"1d4", damageType:"fire" }
+        ]
+      }]
+    }),
   card("clue-toast", "clue", "The Forgotten Toast", "inn",
     "Scratched beneath the table: “A wish shared freely returns twice.”",
     "This is a required endgame clue. Reveal it before the finale."),
@@ -49,7 +63,7 @@ export const cards = [
 export const characters = [
   card("pc-wendy", "character", "Wendy the Wishkeeper", null,
     "A warm-hearted hero who protects every shared wish.", "", ["♥ 32", "🛡 15", "Initiative +3"], {
-      initiative:3, abilities:[10,16,14,12,14,16],
+      initiative:3, proficiencyBonus:2, speed:30, baseArmorClass:15, abilities:[10,16,14,12,14,16],
       actions:[
         { id:"staff", label:"Candle Staff", icon:"⚔", kind:"attack", roll:"1d20+5", damage:"1d6+3", range:"5 ft.", cost:"Action" },
         { id:"wis-save", label:"Wisdom Save", icon:"◈", kind:"save", roll:"1d20+4", effect:"Wisdom saving throw." }
@@ -57,7 +71,7 @@ export const characters = [
     }),
   card("pc-bob", "character", "Bob the Brave", null,
     "A cheerful barbarian who treats every challenge like a party game.", "", ["♥ 44", "🛡 14", "Initiative +2"], {
-      initiative:2, abilities:[17,14,16,8,12,10],
+      initiative:2, proficiencyBonus:2, speed:30, baseArmorClass:14, abilities:[17,14,16,8,12,10],
       actions:[
         { id:"axe", label:"Greataxe", icon:"⚔", kind:"attack", roll:"1d20+5", damage:"1d12+3", range:"5 ft.", cost:"Action" },
         { id:"str-save", label:"Strength Save", icon:"◈", kind:"save", roll:"1d20+5", effect:"Strength saving throw." }
@@ -65,7 +79,7 @@ export const characters = [
     }),
   card("pc-lumi", "character", "Lumi Candlelight", null,
     "A quick-witted mage whose sparks smell faintly of vanilla.", "", ["♥ 26", "🛡 13", "Initiative +4"], {
-      initiative:4, abilities:[8,18,12,16,13,10],
+      initiative:4, proficiencyBonus:2, speed:30, baseArmorClass:13, abilities:[8,18,12,16,13,10],
       actions:[
         { id:"spark", label:"Vanilla Spark", icon:"✦", kind:"attack", roll:"1d20+5", damage:"1d10", range:"120 ft.", cost:"Action" },
         { id:"burst", label:"Candle Burst", icon:"✦", kind:"effect", damage:"2d6", save:{ ability:"Dexterity", dc:13 }, range:"15-ft. cone", effect:"Half damage on success.", cost:"Action" }

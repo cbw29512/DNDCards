@@ -9,6 +9,7 @@ import { findCard } from "./state.js";
 import { rollResultView } from "./rollResultView.js";
 import { library } from "./libraryModel.js";
 import { tableView } from "./tableView.js";
+import { handleGameBoardButton } from "./gameBoardController.js";
 
 let state = loadState();
 let libraryKind = null;
@@ -52,6 +53,7 @@ root.addEventListener("click", event => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (handleGameBoardButton(state, button)) { saveState(state); return render(); }
     if (action === "roll-card-action") {
       const card = findCard(button.dataset.cardId)
         || library.cards.find(candidate => candidate.id === button.dataset.cardId);
@@ -104,7 +106,7 @@ root.addEventListener("click", event => {
       document.body.dataset.print = id; window.print(); return;
     }
     if (action === "place") libraryKind = null;
-    dispatch({ type: action, id, value: id });
+    dispatch({ type: action, id, value: id, slot: button.dataset.slot });
   } catch (error) {
     console.error("[Dungeon Cards] Button action failed.", error);
   }

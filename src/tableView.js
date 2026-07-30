@@ -7,6 +7,7 @@ import { rollResultView } from "./rollResultView.js";
 import { symbolCardView } from "./symbolCardView.js";
 import { tableHeaderView } from "./tableHeaderView.js";
 import { findAdventure } from "./adventures.js";
+import { gameBoardView } from "./gameBoardView.js";
 
 export const tableView = state => {
   const adventure = findAdventure(state.adventureId);
@@ -15,7 +16,7 @@ export const tableView = state => {
   <h1>${adventure?.title || "Choose an adventure"}</h1></div>
   <p><span>◆</span> ${adventure?.subtitle || "Showcase · Create · Play"}</p></section>
   ${initiativeView(state)}${lobbyView(state)}
-  ${state.mode === "dm" ? dmView(state) : playerView(state)}
+  ${state.tableTab === "board" ? gameBoardView(state) : state.mode === "dm" ? dmView(state) : playerView(state)}
   <dialog id="symbol-dialog" class="symbol-dialog">
     <button data-action="close-symbols" class="dialog-close" aria-label="Close">×</button>
     ${symbolCardView()}

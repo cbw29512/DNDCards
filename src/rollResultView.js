@@ -4,6 +4,7 @@ export const rollResultView = state => {
   const result = state.lastRoll;
   if (!result) return "";
   const action = result.action;
+  const damageParts = result.damageComponents || [];
   return `<aside class="roll-tray" role="status" aria-live="polite">
     <header><div><small>LATEST CARD ROLL</small><h2>${result.cardTitle} · ${action.label}</h2></div>
       <button data-action="close-roll" aria-label="Close roll result">×</button></header>
@@ -12,9 +13,11 @@ export const rollResultView = state => {
       ${result.roll ? `<article><span>${action.kind.toUpperCase()}</span><b>${result.roll.total}</b><small>${diceText(result.roll)}</small></article>` : ""}
       ${action.save ? `<article><span>${action.save.ability.toUpperCase()} SAVE</span><b>DC ${action.save.dc}</b><small>Target rolls against this DC</small></article>` : ""}
       ${result.damage ? `<article><span>${result.critical ? "CRITICAL DAMAGE" : "DAMAGE"}</span><b>${result.damage.total}</b><small>${diceText(result.damage)}</small></article>` : ""}
+      ${damageParts.map(part => `<article><span>${part.icon || "◆"} ${(part.damageType || "damage").toUpperCase()}</span><b>${part.roll.total}</b><small>${part.label} · ${diceText(part.roll)}</small></article>`).join("")}
+      ${damageParts.length ? `<article><span>TOTAL DAMAGE</span><b>${result.damageTotal}</b><small>All damage types</small></article>` : ""}
     </div>
     <p><b>${action.range || "Self"}</b>${action.effect ? ` · ${action.effect}` : ""}</p>
     <details><summary>Recent rolls</summary><ol>${state.rollHistory.map(item => `
-      <li><b>${item.cardTitle}</b> · ${item.action.label} <span>${item.attack?.total ?? item.roll?.total ?? `DC ${item.action.save?.dc}`}${item.damage ? ` · ${item.damage.total} damage` : ""}</span></li>`).join("")}</ol></details>
+      <li><b>${item.cardTitle}</b> · ${item.action.label} <span>${item.attack?.total ?? item.roll?.total ?? `DC ${item.action.save?.dc}`}${item.damage ? ` · ${item.damage.total} damage` : item.damageTotal ? ` · ${item.damageTotal} damage` : ""}</span></li>`).join("")}</ol></details>
   </aside>`;
 };
