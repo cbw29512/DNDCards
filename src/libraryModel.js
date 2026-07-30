@@ -1,8 +1,11 @@
-import { rawLibraryCatalog } from "./libraryCatalog.js";
+import { rawLibraryCatalog } from "./libraryCatalog.js?v=card-import-1";
 
-export const LIBRARY_KINDS = ["all","room","npc","monster","wild-shape","trap","treasure","clue","event","character","reference"];
+export const LIBRARY_KINDS = [
+  "all", "room", "npc", "monster", "wild-shape", "trap", "treasure",
+  "clue", "event", "character", "weapon", "spell", "reference"
+];
 
-const fingerprint = card => [card.kind, card.title, card.playerText]
+const fingerprint = card => [card.kind, card.title, card.playerText, card.edition]
   .join("|").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
 export const buildLibrary = cards => {
@@ -38,7 +41,7 @@ export const filterLibrary = (cards, query, kind) => {
       card.roomNumber ? `room ${card.roomNumber}` : "",
       card.playerText, card.dmText, card.source, card.edition,
       card.speed, card.challengeLabel ? `CR ${card.challengeLabel}` : "",
-      ...card.quickStats
+      ...(card.quickStats || [])
     ].join(" ").toLowerCase();
     return inKind && terms.every(term => text.includes(term));
   });
