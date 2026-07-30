@@ -11,12 +11,14 @@ import { gameBoardView } from "./gameBoardView.js?v=npc-lane-1";
 
 export const tableView = state => {
   const adventure = findAdventure(state.adventureId);
+  const needsAdventureSetup = state.identity?.role === "dm"
+    && (!adventure || state.adventureComplete);
   return `<div class="game-shell">${tableHeaderView(state)}
   <section class="quest-banner"><div><small>${adventure ? "ACTIVE ADVENTURE" : "DUNGEON CARDS PLATFORM"}</small>
   <h1>${adventure?.title || "Choose an adventure"}</h1></div>
   <p><span>◆</span> ${adventure?.subtitle || "Showcase · Create · Play"}</p></section>
   ${initiativeView(state)}${lobbyView(state)}
-  ${state.tableTab === "board" ? gameBoardView(state) : state.mode === "dm" ? dmView(state) : playerView(state)}
+  ${needsAdventureSetup ? dmView(state) : gameBoardView(state)}
   <dialog id="symbol-dialog" class="symbol-dialog">
     <button data-action="close-symbols" class="dialog-close" aria-label="Close">×</button>
     ${symbolCardView()}
