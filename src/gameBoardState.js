@@ -21,14 +21,8 @@ export const updateGameBoardState = (next, action) => {
   }
   if (action.type !== "preview-character") return false;
   if (next.identity?.role !== "dm") throw new Error("Only the DM can create preview characters.");
-  let player = next.players.find(candidate => candidate.id === "player-preview");
-  if (!player) {
-    player = { id:"player-preview", name:"Player Preview", characterId:null, backpackIds:[] };
-    next.players.push(player);
-  }
-  player.characterId = action.id;
-  next.activePlayerId = player.id;
-  next.equipmentByPlayer[player.id] ||= {};
-  next.pendingItemsByPlayer[player.id] ||= [];
+  // A preview is presentation-only. It must never claim a hero, enter
+  // initiative, receive treasure, or behave like a real connected player.
+  next.previewCharacterId = action.id;
   return true;
 };
