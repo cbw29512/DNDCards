@@ -3,13 +3,21 @@ import { importedCatalog } from "../src/importedCatalog.js";
 import { parseFormula } from "../src/diceEngine.js";
 
 try {
+  const symbolKey = new Set(["♥", "🛡", "➜", "⚔", "➶", "✦", "⬡", "◈", "↻", "⚡", "☕", "☾"]);
   if (library.rejected.length) throw new Error(`${library.rejected.length} catalog records were rejected.`);
-  if (library.cards.length !== 384) throw new Error(`Expected 384 unique cards; found ${library.cards.length}.`);
+  if (library.cards.length !== 1247) throw new Error(`Expected 1,247 unique cards; found ${library.cards.length}.`);
   const missing = LIBRARY_KINDS.filter(kind =>
     kind !== "all" && !library.cards.some(card => card.kind === kind));
   if (missing.length) throw new Error(`Empty required categories: ${missing.join(", ")}`);
-  if (importedCatalog.length !== 286) {
-    throw new Error(`Expected 286 imported cards; found ${importedCatalog.length}.`);
+  if (importedCatalog.length !== 1149) {
+    throw new Error(`Expected 1,149 imported cards; found ${importedCatalog.length}.`);
+  }
+  for (const card of importedCatalog) {
+    for (const action of card.actions || []) {
+      if (!symbolKey.has(action.icon)) {
+        throw new Error(`${card.id} uses action icon "${action.icon}" outside the Symbol Key.`);
+      }
+    }
   }
   for (const card of importedCatalog) {
     for (const action of card.actions || []) {
