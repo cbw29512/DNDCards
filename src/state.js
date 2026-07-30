@@ -39,6 +39,10 @@ export const updateState = (state, action) => {
       next.mode = action.value;
     }
     if (action.type === "table-tab") next.tableTab = action.id;
+    if (action.type === "set-spell-slot") {
+      next.spellSlotByCard ||= {};
+      next.spellSlotByCard[action.id] = Number(action.value);
+    }
     updateGameBoardState(next, action);
     if (action.type === "load-adventure") {
       const adventure = findAdventure(action.id);
