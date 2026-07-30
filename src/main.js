@@ -2,11 +2,12 @@ import { allCards } from "./data.js";
 import { libraryCards } from "./dmView.js?v=npc-lane-1";
 import { rollInitiative, finishTurn } from "./initiative.js";
 import { landingView } from "./landingView.js";
-import { libraryView } from "./libraryView.js?v=card-import-2";
+import { libraryView } from "./libraryView.js?v=catalog-expand-1";
 import { loadState, saveState, updateState, findCard } from "./state.js?v=unified-board-2";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js?v=card-import-1";
+import { library } from "./libraryModel.js?v=catalog-expand-1";
+import { spellActionAtLevel } from "./spellUpcast.js";
 import { tableView } from "./tableView.js?v=unified-board-3";
 import { handleGameBoardButton } from "./gameBoardController.js";
 
@@ -57,7 +58,10 @@ root.addEventListener("click", event => {
       const card = findCard(button.dataset.cardId)
         || library.cards.find(candidate => candidate.id === button.dataset.cardId);
       if (!card) throw new Error(`Card ${button.dataset.cardId} was not found.`);
-      const result = executeCardAction(card, id);
+      const result = executeCardAction(card, id, Math.random, {
+        slotLevel: state.spellSlotByCard?.[card.id],
+        transformAction: spellActionAtLevel
+      });
       state.lastRoll = result;
       state.rollHistory = [result, ...state.rollHistory].slice(0, 10);
       if (result.action.cost && !state.usedResources.includes(result.action.cost)) state.usedResources.push(result.action.cost);
@@ -65,6 +69,7 @@ root.addEventListener("click", event => {
       return render();
     }
     if (action === "close-roll") { state.lastRoll = null; saveState(state); return render(); }
+    if (action === "select-spell-slot") return;
     if (action === "adjust-health") return dispatch({ type:"adjust-health", id, amount:Number(button.dataset.amount) });
     if (action === "rest") return dispatch({ type:"rest", restType:id });
     if (action === "open-card-library") {
@@ -142,6 +147,20 @@ root.addEventListener("input", event => {
     search?.setSelectionRange(catalogQuery.length, catalogQuery.length);
   } catch (error) {
     console.error("[Dungeon Cards] Card search failed.", error);
+  }
+});
+
+root.addEventListener("change", event => {
+  try {
+    const picker = event.target.closest("[data-action='select-spell-slot']");
+    if (!picker) return;
+    dispatch({
+      type: "set-spell-slot",
+      id: picker.dataset.cardId,
+      value: picker.value
+    });
+  } catch (error) {
+    console.error("[Dungeon Cards] Spell slot could not be selected.", error);
   }
 });
 
