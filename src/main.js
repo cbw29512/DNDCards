@@ -2,11 +2,11 @@ import { allCards } from "./data.js";
 import { libraryCards } from "./dmView.js?v=npc-lane-1";
 import { rollInitiative, finishTurn } from "./initiative.js";
 import { landingView } from "./landingView.js";
-import { libraryView } from "./libraryView.js?v=npc-lane-1";
+import { libraryView } from "./libraryView.js?v=card-import-1";
 import { loadState, saveState, updateState, findCard } from "./state.js?v=unified-board-2";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js";
+import { library } from "./libraryModel.js?v=card-import-1";
 import { tableView } from "./tableView.js?v=unified-board-3";
 import { handleGameBoardButton } from "./gameBoardController.js";
 
