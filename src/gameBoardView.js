@@ -1,7 +1,7 @@
-import { allCards, characters, rooms } from "./data.js?v=character-art-1";
+import { allCards, characters, rooms } from "./data.js?v=character-art-2";
 import { findAdventure } from "./adventures.js";
 import { cardView, emptyView } from "./cardView.js?v=unified-board-1";
-import { deriveCharacter } from "./characterEngine.js";
+import { deriveCharacter } from "./characterEngine.js?v=character-art-2";
 import { diceTrayView } from "./diceTrayView.js";
 
 const LANES = [

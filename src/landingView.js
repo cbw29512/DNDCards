@@ -1,4 +1,4 @@
-import { productDemoView } from "./productDemoView.js";
+import { productDemoView } from "./productDemoView.js?v=character-art-2";
 import { symbolCardView } from "./symbolCardView.js";
 
 export const landingView = error => `

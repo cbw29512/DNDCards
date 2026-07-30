@@ -1,4 +1,4 @@
-import { importedCatalog } from "./importedCatalog.js?v=character-art-1";
+import { importedCatalog } from "./importedCatalog.js?v=character-art-2";
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
 
 export const rooms = [

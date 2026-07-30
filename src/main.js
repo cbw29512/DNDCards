@@ -1,20 +1,20 @@
-import { allCards } from "./data.js?v=character-art-1";
-import { libraryCards } from "./dmView.js?v=character-art-1";
+import { allCards } from "./data.js?v=character-art-2";
+import { libraryCards } from "./dmView.js?v=character-art-2";
 import {
   rollInitiative,
   finishTurn,
   readyAction,
   triggerReadyAction
-} from "./initiative.js?v=ready-action-1";
-import { landingView } from "./landingView.js";
-import { libraryView } from "./libraryView.js?v=character-art-1";
-import { loadState, saveState, updateState, findCard } from "./state.js?v=character-art-1";
+} from "./initiative.js?v=character-art-2";
+import { landingView } from "./landingView.js?v=character-art-2";
+import { libraryView } from "./libraryView.js?v=character-art-2";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=character-art-2";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js?v=character-art-1";
+import { library } from "./libraryModel.js?v=character-art-2";
 import { spellActionAtLevel } from "./spellUpcast.js";
-import { tableView } from "./tableView.js?v=character-art-1";
-import { handleGameBoardButton } from "./gameBoardController.js";
+import { tableView } from "./tableView.js?v=character-art-2";
+import { handleGameBoardButton } from "./gameBoardController.js?v=character-art-2";
 
 let state = loadState();
 let libraryKind = null;
