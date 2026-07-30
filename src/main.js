@@ -1,14 +1,13 @@
 import { allCards } from "./data.js";
-import { libraryCards } from "./dmView.js";
+import { libraryCards } from "./dmView.js?v=card-faces-1";
 import { rollInitiative, finishTurn } from "./initiative.js";
 import { landingView } from "./landingView.js";
 import { libraryView } from "./libraryView.js";
-import { loadState, saveState, updateState } from "./state.js";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=card-faces-1";
 import { executeCardAction } from "./diceEngine.js";
-import { findCard } from "./state.js";
 import { rollResultView } from "./rollResultView.js";
 import { library } from "./libraryModel.js";
-import { tableView } from "./tableView.js";
+import { tableView } from "./tableView.js?v=card-faces-1";
 import { handleGameBoardButton } from "./gameBoardController.js";
 
 let state = loadState();

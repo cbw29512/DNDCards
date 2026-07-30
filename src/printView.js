@@ -1,5 +1,5 @@
 import { allCards, rooms } from "./data.js";
-import { cardView } from "./cardView.js";
+import { cardView } from "./cardView.js?v=card-faces-1";
 import { symbolCardView } from "./symbolCardView.js";
 
 export const printView = state => `

@@ -6,6 +6,7 @@ export const updateGameBoardState = (next, action) => {
   }
   if (action.type === "flip-card") {
     if (next.identity?.role !== "dm") throw new Error("Only the DM can inspect private card backs.");
+    next.dmFrontCardIds ||= [];
     next.dmFrontCardIds = next.dmFrontCardIds.includes(action.id)
       ? next.dmFrontCardIds.filter(id => id !== action.id)
       : [...next.dmFrontCardIds, action.id];

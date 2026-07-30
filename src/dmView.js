@@ -1,6 +1,6 @@
-import { allCards, rooms } from "./data.js";
+import { allCards, rooms } from "./data.js?v=card-faces-1";
 import { SLOT_KINDS } from "./schema.js";
-import { cardView, emptyView } from "./cardView.js";
+import { cardView, emptyView } from "./cardView.js?v=card-faces-1";
 import { adventures, findAdventure } from "./adventures.js";
 
 export const dmView = state => {
