@@ -15,6 +15,9 @@ export const tableHeaderView = state => {
     <nav aria-label="Game controls">
       ${isDm ? `<button data-action="table-tab" data-id="adventure" class="${state.tableTab === "adventure" ? "active" : ""}">⚒ Adventure</button>` : ""}
       <button data-action="table-tab" data-id="board" class="${state.tableTab === "board" ? "active" : ""}">⚔ Game Board</button>
+      ${isDm && state.tableTab === "board" ? `
+        <button data-action="board-perspective" data-id="dm" class="${state.boardPerspective !== "player" ? "active" : ""}">◆ DM View</button>
+        <button data-action="board-perspective" data-id="player" class="${state.boardPerspective === "player" ? "active" : ""}">♟ Player Preview</button>` : ""}
       <button data-action="symbols">? Rules key</button>
       ${isDm ? `<button data-action="print" data-id="home">▤ Print</button>` : ""}
       <button data-action="logout">↩ Exit</button>

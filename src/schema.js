@@ -19,6 +19,7 @@ export const createState = () => ({
   lastError: null,
   mode: "dm",
   tableTab: "adventure",
+  boardPerspective: "dm",
   adventureId: null,
   adventureComplete: false,
   completedRoomIds: [],

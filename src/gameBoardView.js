@@ -35,7 +35,11 @@ const lane = (state, kind, title, icon, isDm) => {
 
 const playerRail = state => {
   const player = state.players.find(candidate => candidate.id === state.activePlayerId);
-  if (!player?.characterId) return `<aside class="character-sheet"><h2>Choose a hero</h2><p>Claim a character card to open the equipment body.</p></aside>`;
+  if (!player?.characterId) return `<aside class="character-sheet character-picker">
+    <header><small>PRE-GENERATED HEROES</small><h2>Choose a hero</h2>
+      <p>${state.identity?.role === "dm" ? "Select a character to inspect the complete player screen." : "Claim an available hero from the party panel."}</p></header>
+    ${state.identity?.role === "dm" ? characters.map(character => `<button data-action="preview-character" data-id="${character.id}">
+      <b>${character.title}</b><span>${character.playerText}</span></button>`).join("") : ""}</aside>`;
   const character = characters.find(card => card.id === player.characterId);
   const equipment = state.equipmentByPlayer[player.id] || {};
   const equipped = Object.values(equipment).map(id => allCards.find(card => card.id === id)).filter(Boolean);
@@ -44,6 +48,8 @@ const playerRail = state => {
   const pending = (state.pendingItemsByPlayer[player.id] || []).map(id => allCards.find(card => card.id === id)).filter(Boolean);
   return `<aside class="character-sheet">
     <header><small>YOUR CHARACTER</small><h2>${player.name}</h2></header>
+    ${state.identity?.role === "dm" ? `<nav class="hero-switcher" aria-label="Preview another pre-generated hero">
+      ${characters.map(hero => `<button data-action="preview-character" data-id="${hero.id}" class="${hero.id === character.id ? "active" : ""}">${hero.title.split(" ")[0]}</button>`).join("")}</nav>` : ""}
     ${cardView(character, { health:state.healthByCard[character.id] })}
     <div class="derived-stats"><span><b>🛡 ${derived.armorClass}</b><small>Armor Class</small></span>
       <span><b>⚡ ${derived.initiative >= 0 ? "+" : ""}${derived.initiative}</b><small>Initiative</small></span>
@@ -66,7 +72,7 @@ const playerRail = state => {
 };
 
 export const gameBoardView = state => {
-  const isDm = state.identity?.role === "dm";
+  const isDm = state.identity?.role === "dm" && state.boardPerspective !== "player";
   return `<main class="game-board">
     ${diceTrayView(state)}
     <div class="game-board__layout">

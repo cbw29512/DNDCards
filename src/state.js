@@ -5,7 +5,6 @@ import { loadState, saveState } from "./stateStorage.js";
 
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
 export { loadState, saveState };
-
 export const updateState = (state, action) => {
   try {
     const next = structuredClone(state);
@@ -14,6 +13,7 @@ export const updateState = (state, action) => {
       next.screen = "table";
       next.mode = "dm";
       next.tableTab = next.adventureId ? "board" : "adventure";
+      next.boardPerspective = "dm";
       next.identity = { role: "dm", name: action.name.trim() };
     }
     if (action.type === "login-player") {
@@ -24,6 +24,7 @@ export const updateState = (state, action) => {
       next.screen = "table";
       next.mode = "player";
       next.tableTab = "board";
+      next.boardPerspective = "player";
       next.identity = { role: "player", name: action.name.trim(), playerId: id };
     }
     if (action.type === "logout") {
@@ -37,6 +38,10 @@ export const updateState = (state, action) => {
       next.mode = action.value;
     }
     if (action.type === "table-tab") next.tableTab = action.id;
+    if (action.type === "board-perspective") {
+      if (next.identity?.role !== "dm") throw new Error("Only the DM can switch table previews.");
+      next.boardPerspective = action.id;
+    }
     if (action.type === "load-adventure") {
       const adventure = findAdventure(action.id);
       if (!adventure) throw new Error("That adventure pack could not be found.");
@@ -98,6 +103,18 @@ export const updateState = (state, action) => {
       next.pendingItemsByPlayer[id] = [];
     }
     if (action.type === "select-player") next.activePlayerId = action.id;
+    if (action.type === "preview-character") {
+      if (next.identity?.role !== "dm") throw new Error("Only the DM can create preview characters.");
+      let player = next.players.find(candidate => candidate.id === "player-preview");
+      if (!player) {
+        player = { id:"player-preview", name:"Player Preview", characterId:null, backpackIds:[] };
+        next.players.push(player);
+      }
+      player.characterId = action.id;
+      next.activePlayerId = player.id;
+      next.equipmentByPlayer[player.id] ||= {};
+      next.pendingItemsByPlayer[player.id] ||= [];
+    }
     if (action.type === "claim") {
       const player = next.players.find(player => player.id === next.activePlayerId);
       if (player && !next.players.some(other => other.characterId === action.id)) {
