@@ -1,0 +1,31 @@
+.spell-slot-picker {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .45rem;
+  align-items: center;
+  margin: .35rem 0;
+  padding: .35rem .45rem;
+  color: #29182e;
+  background: #f0d57f;
+  border: 1px solid #7d5b17;
+  border-radius: .35rem;
+  font-size: .58rem;
+  font-weight: 900;
+}
+
+.spell-slot-picker select {
+  max-width: 120px;
+  min-height: 30px;
+  padding: .2rem;
+  color: #fff;
+  background: #321b36;
+  border: 1px solid #d9ae4e;
+  border-radius: .25rem;
+  font-weight: 800;
+}
+
+@media print {
+  .spell-slot-picker {
+    display: none !important;
+  }
+}
