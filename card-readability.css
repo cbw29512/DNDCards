@@ -1,0 +1,59 @@
+.library-card__band {
+  height: 58px;
+}
+
+.library-card__band strong {
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: normal;
+  line-height: 1.08;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.library-card__band .card-title--long {
+  font-size: .78rem;
+}
+
+.library-card__body > p {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #241b20;
+  font-size: .72rem;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.library-card--back .library-card__body > p {
+  -webkit-line-clamp: 3;
+}
+
+.library-card--monster .wild-actions button,
+.library-card--npc .wild-actions button {
+  min-height: 34px;
+}
+
+.library-card--monster .wild-actions button b,
+.library-card--npc .wild-actions button b {
+  overflow: hidden;
+  max-width: 64%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalog-limit {
+  margin: 0 0 1rem;
+  padding: .75rem 1rem;
+  color: #43263f;
+  background: #f6e8bd;
+  border-left: 4px solid #744363;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+@media print {
+  .catalog-limit {
+    display: none;
+  }
+}
