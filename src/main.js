@@ -1,6 +1,11 @@
 import { allCards } from "./data.js";
 import { libraryCards } from "./dmView.js?v=npc-lane-1";
-import { rollInitiative, finishTurn } from "./initiative.js";
+import {
+  rollInitiative,
+  finishTurn,
+  readyAction,
+  triggerReadyAction
+} from "./initiative.js?v=ready-action-1";
 import { landingView } from "./landingView.js";
 import { libraryView } from "./libraryView.js?v=catalog-expand-1";
 import { loadState, saveState, updateState, findCard } from "./state.js?v=unified-board-2";
@@ -101,6 +106,13 @@ root.addEventListener("click", event => {
     if (action === "finish-turn") {
       state = finishTurn(state); saveState(state); return render();
     }
+    if (action === "open-ready-action") {
+      return document.querySelector("#ready-action-dialog")?.showModal();
+    }
+    if (action === "close-ready-action") return button.closest("dialog")?.close();
+    if (action === "trigger-ready-action") {
+      state = triggerReadyAction(state, id); saveState(state); return render();
+    }
     if (action === "resource") {
       state.usedResources = state.usedResources.includes(id)
         ? state.usedResources.filter(item => item !== id) : [...state.usedResources, id];
@@ -118,6 +130,13 @@ root.addEventListener("click", event => {
 
 root.addEventListener("submit", event => {
   try {
+    if (event.target.id === "ready-action-form") {
+      event.preventDefault();
+      const form = new FormData(event.target);
+      state = readyAction(state, form.get("trigger"), form.get("response"));
+      saveState(state);
+      return render();
+    }
     if (event.target.id === "login-form") {
       event.preventDefault();
       const form = new FormData(event.target);
