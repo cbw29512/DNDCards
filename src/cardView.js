@@ -5,6 +5,11 @@ const ICONS = {
   room:"⌂", npc:"♟", monster:"☠", trap:"⚠", treasure:"◆",
   clue:"⌕", event:"✦", character:"♞", "wild-shape":"🐾"
 };
+const SLOT_NAMES = {
+  room:"Location slot", npc:"NPC slot", monster:"Monster slot", trap:"Trap slot",
+  treasure:"Treasure slot", clue:"Clue slot", event:"Event slot",
+  character:"Character slot", "wild-shape":"Wild Shape slot"
+};
 
 const art = card => card.art
   ? `style="background-image:linear-gradient(180deg,transparent 42%,#130b16ee),url('${escape(card.art)}')"`
@@ -19,17 +24,20 @@ const actionButtons = (card, interactive) => !interactive ? "" : `
       <span>${escape(action.roll || (action.save ? `DC ${action.save.dc}` : ""))}${action.damage ? ` · ${escape(action.damage)}` : ""}</span>
     </button>`).join("")}</div>`;
 
+const cardBand = (card, dm = false) => `<header class="card-slot-band card-slot-band--${escape(card.kind)}">
+  <i>${ICONS[card.kind] || "◆"}</i><span><small>${SLOT_NAMES[card.kind] || "Card slot"}${dm ? " · DM BACK" : ""}</small>
+  <b>${escape(card.title)}</b></span></header>`;
+
 const front = (card, options) => `<div class="card-face card-face--front card-kind--${escape(card.kind)}" ${art(card)}>
-  <header><span>${escape(card.kind)}${card.room ? ` · ${escape(card.room)}` : ""}</span><b>${ICONS[card.kind] || "◆"}</b></header>
-  <div class="card-front-title"><h3>${escape(card.title)}</h3><p>${escape(card.playerText)}</p></div>
+  ${cardBand(card)}
+  <div class="card-player-copy"><small>PLAYER INFORMATION</small><p>${escape(card.playerText)}</p></div>
   ${["character","treasure","wild-shape"].includes(card.kind) && statList(card).length
     ? `<ul class="card-front-stats">${statList(card).slice(0, 3).map(stat => `<li>${escape(stat)}</li>`).join("")}</ul>` : ""}
   ${actionButtons(card, options.interactive)}
 </div>`;
 
 const back = (card, options) => `<div class="card-face card-face--back">
-  <header><small>${escape(card.kind)}${card.room ? ` · ${escape(card.room)}` : ""}</small>
-    <h3>${escape(card.title)}</h3><span>DM BACK</span></header>
+  ${cardBand(card, true)}
   ${statList(card).length ? `<ul class="card-back-stats">${statList(card).slice(0, 6).map(stat => `<li>${escape(stat)}</li>`).join("")}</ul>` : ""}
   ${options.health ? `<div class="card-health"><strong>♥ ${options.health.current} / ${options.health.maximum}</strong>
     <div><button data-action="adjust-health" data-id="${card.id}" data-amount="-5">−5</button>

@@ -11,6 +11,11 @@ const icons = {
   room: "⌂", npc: "♟", monster: "☠", trap: "⚠", treasure: "◆",
   clue: "⌕", event: "✦", character: "♞", reference: "?", "wild-shape": "🐾"
 };
+const slotNames = {
+  room:"Location slot", npc:"NPC slot", monster:"Monster slot", trap:"Trap slot",
+  treasure:"Treasure slot", clue:"Clue slot", event:"Event slot",
+  character:"Character slot", "wild-shape":"Wild Shape slot"
+};
 
 const escapeAttribute = value => String(value).replace(/[&<>"']/g, char =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
@@ -27,11 +32,11 @@ const libraryCard = card => {
         <b>${action.icon} ${action.label}</b><small>${action.roll}${action.damage ? ` · ${action.damage}` : ""}</small>
       </button>`).join("")}</div>` : "";
   return `<article class="library-card library-card--${card.kind}">
-    <div class="library-card__art">
-      <span>${card.roomNumber ? `ROOM ${card.roomNumber}` : card.kind.toUpperCase()}</span>
-      <b>${icons[card.kind]}</b><small>${card.badge || card.kind}</small>
+    <div class="library-card__band">
+      <b>${icons[card.kind]}</b><span><small>${slotNames[card.kind] || card.kind}</small>
+      <strong>${card.title}</strong></span>
     </div>
-    <div class="library-card__body"><small>${card.id} · ${card.source}</small><h3>${card.title}</h3>
+    <div class="library-card__body"><small>${card.roomNumber ? `ROOM ${card.roomNumber} · ` : ""}${card.id} · ${card.source}</small>
       <p>${card.playerText}</p>
       ${card.quickStats.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
       ${abilityRow}${actionButtons}

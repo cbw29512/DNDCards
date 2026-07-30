@@ -1,5 +1,5 @@
-import { allCards, characters } from "./data.js?v=card-faces-2";
-import { cardView, emptyView } from "./cardView.js?v=card-faces-2";
+import { allCards, characters } from "./data.js?v=slot-band-1";
+import { cardView, emptyView } from "./cardView.js?v=slot-band-1";
 import { deriveCharacter } from "./characterEngine.js";
 import { diceTrayView } from "./diceTrayView.js";
 
