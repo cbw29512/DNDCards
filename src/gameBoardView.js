@@ -41,8 +41,9 @@ const lane = (state, kind, title, icon, isDm) => {
     <div class="board-lane__cards">${laneCards.length ? laneCards.map(card => `
       <div class="board-card">${cardView(card, isDm ? {
         dm:true, face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back",
-        health:state.healthByCard[card.id], flip:true
-      } : { face:"front" })}
+        health:state.healthByCard[card.id], flip:true,
+        spellSlot:state.spellSlotByCard?.[card.id]
+      } : { face:"front", spellSlot:state.spellSlotByCard?.[card.id] })}
       ${isDm ? `<div class="board-card-controls">
         <button data-action="reveal" data-id="${card.id}">${state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal to players"}</button>
       </div>` : ""}
@@ -74,7 +75,10 @@ const playerRail = state => {
     <header><small>YOUR CHARACTER</small><h2>${player.name}</h2></header>
     ${state.identity?.role === "dm" ? `<nav class="hero-switcher" aria-label="Preview another pre-generated hero">
       ${characters.map(hero => `<button data-action="preview-character" data-id="${hero.id}" class="${player.id === "dm-preview" && hero.id === character.id ? "active" : ""}">${hero.title.split(" ")[0]}</button>`).join("")}</nav>` : ""}
-    ${cardView(character, { face:"front", interactive:true })}
+    ${cardView(character, {
+      face:"front", interactive:true,
+      spellSlot:state.spellSlotByCard?.[character.id]
+    })}
     <div class="derived-stats"><span><b>🛡 ${derived.armorClass}</b><small>Armor Class</small></span>
       <span><b>⚡ ${derived.initiative >= 0 ? "+" : ""}${derived.initiative}</b><small>Initiative</small></span>
       <span><b>➟ ${derived.speed}</b><small>Speed</small></span></div>
