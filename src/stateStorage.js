@@ -12,6 +12,18 @@ export const loadState = () => {
     state.pendingItemsByPlayer ||= {};
     state.dmFrontCardIds ||= [];
     state.libraryBackIds ||= [];
+    const legacyPreview = state.players.find(player => player.id === "player-preview");
+    if (legacyPreview) {
+      // Older builds stored the DM preview as a real player. Migrate that
+      // presentation choice without letting it claim a hero or enter combat.
+      state.previewCharacterId ||= legacyPreview.characterId;
+      state.players = state.players.filter(player => player.id !== "player-preview");
+      if (state.activePlayerId === "player-preview") {
+        state.activePlayerId = state.players[0]?.id || null;
+      }
+      delete state.equipmentByPlayer["player-preview"];
+      delete state.pendingItemsByPlayer["player-preview"];
+    }
     for (const room of rooms) {
       state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
     }
