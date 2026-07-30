@@ -1,5 +1,5 @@
 import { allCards, characters } from "./data.js";
-import { cardView, emptyView } from "./cardView.js?v=card-click-1";
+import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 
 const zone = (title, icon, cards, empty, state) => `<section class="zone"><header><span>${icon}</span><h2>${title}</h2>
   <small>${cards.length} active</small></header>

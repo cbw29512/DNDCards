@@ -1,5 +1,5 @@
 import { characters } from "./data.js";
-import { cardView } from "./cardView.js?v=card-click-1";
+import { cardView } from "./cardView.js?v=npc-lane-1";
 
 export const lobbyView = state => {
   const active = state.players.find(player => player.id === state.activePlayerId);

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { deriveCharacter, executeEquippedAttack } from "../src/characterEngine.js";
 import { characters, cards } from "../src/data.js";
+import { createState } from "../src/schema.js";
+import { gameBoardView } from "../src/gameBoardView.js";
 
 const bob = characters.find(card => card.id === "pc-bob");
 const blade = cards.find(card => card.id === "treasure-emberblade");
@@ -16,4 +18,13 @@ assert.equal(result.damageComponents[0].roll.dice.length, 2, "critical doubles s
 assert.equal(result.damageComponents[0].roll.modifier, 4, "fixed modifiers are not doubled");
 assert.equal(result.damageComponents[1].damageType, "fire");
 assert.equal(result.damageTotal, 14);
+const dmState = {
+  ...createState(), identity:{ role:"dm", name:"DM" }, tableTab:"board",
+  placedByRoom:{ square:["room-square", "npc-wendy"] }, healthByCard:{}
+};
+assert.match(gameBoardView(dmState), />NPCs</);
+assert.match(gameBoardView(dmState), /Wendy, Keeper of the Wish/);
+const hiddenPlayer = { ...dmState, identity:{ role:"player", name:"Hero" }, boardPerspective:"player" };
+assert.doesNotMatch(gameBoardView(hiddenPlayer), /Wendy, Keeper of the Wish/);
+assert.match(gameBoardView({ ...hiddenPlayer, revealedIds:["npc-wendy"] }), /Wendy, Keeper of the Wish/);
 console.log("Game board engine tests passed.");

@@ -1,10 +1,11 @@
-import { allCards, characters } from "./data.js?v=card-click-1";
-import { cardView, emptyView } from "./cardView.js?v=card-click-1";
+import { allCards, characters } from "./data.js?v=npc-lane-1";
+import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 import { deriveCharacter } from "./characterEngine.js";
 import { diceTrayView } from "./diceTrayView.js";
 
 const LANES = [
   { kind:"room", title:"Location", icon:"⌂" },
+  { kind:"npc", title:"NPCs", icon:"♟" },
   { kind:"monster", title:"Monsters", icon:"☠" },
   { kind:"trap", title:"Traps", icon:"⚠" },
   { kind:"treasure", title:"Treasure", icon:"◆" }

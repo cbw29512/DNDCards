@@ -1,6 +1,6 @@
-import { allCards, rooms } from "./data.js?v=card-click-1";
+import { allCards, rooms } from "./data.js?v=npc-lane-1";
 import { SLOT_KINDS } from "./schema.js";
-import { cardView, emptyView } from "./cardView.js?v=card-click-1";
+import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 import { adventures, findAdventure } from "./adventures.js";
 
 export const dmView = state => {

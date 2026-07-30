@@ -6,7 +6,7 @@
  * State: private DM board + shared reveals + per-player collections.
  */
 export const SLOT_KINDS = ["room", "npc", "monster", "trap", "treasure", "clue"];
-export const BOARD_KINDS = ["room", "monster", "trap", "treasure"];
+export const BOARD_KINDS = ["room", "npc", "monster", "trap", "treasure"];
 export const EQUIPMENT_SLOTS = [
   "head", "neck", "armor", "back", "mainHand", "offHand",
   "hands", "waist", "feet", "ring1", "ring2"
