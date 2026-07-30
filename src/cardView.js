@@ -1,3 +1,5 @@
+import { spellActionAtLevel, spellSlotOptions } from "./spellUpcast.js";
+
 const escape = value => String(value || "").replace(/[&<>"']/g, char =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" })[char]);
 
@@ -17,12 +19,26 @@ const art = card => card.art
 
 const statList = card => card.stats || card.quickStats || [];
 
-const actionButtons = (card, interactive) => !interactive ? "" : `
-  <div class="card-actions">${(card.actions || []).slice(0, 3).map(action => `
+const actionButtons = (card, interactive, selectedLevel) => !interactive ? "" : `
+  <div class="card-actions">${(card.actions || []).slice(0, 3).map(baseAction => {
+    const action = spellActionAtLevel(card, baseAction, selectedLevel);
+    return `
     <button data-action="roll-card-action" data-card-id="${escape(card.id)}" data-id="${escape(action.id)}">
       <b>${escape(action.icon || "◈")} ${escape(action.label)}</b>
       <span>${escape(action.roll || (action.save ? `DC ${action.save.dc}` : ""))}${action.damage ? ` · ${escape(action.damage)}` : ""}</span>
-    </button>`).join("")}</div>`;
+    </button>`;
+  }).join("")}</div>`;
+
+const spellSlotControl = (card, selectedLevel) => {
+  const options = spellSlotOptions(card, selectedLevel);
+  if (!options.length) return "";
+  return `<label class="spell-slot-picker"><span>CAST USING</span>
+    <select data-action="select-spell-slot" data-card-id="${escape(card.id)}">
+      ${options.map(option => `<option value="${option.level}" ${option.selected ? "selected" : ""}>
+        Level ${option.level}${option.level === options[0].level ? " (base)" : ""}
+      </option>`).join("")}
+    </select></label>`;
+};
 
 const cardBand = (card, dm = false) => `<header class="card-slot-band card-slot-band--${escape(card.kind)}">
   <i>${ICONS[card.kind] || "◆"}</i><span><small>${SLOT_NAMES[card.kind] || "Card slot"}${dm ? " · DM BACK" : ""}</small>
@@ -33,7 +49,7 @@ const front = (card, options) => `<div class="card-face card-face--front card-ki
   <div class="card-player-copy"><small>PLAYER INFORMATION</small><p>${escape(card.playerText)}</p></div>
   ${["character","treasure","wild-shape"].includes(card.kind) && statList(card).length
     ? `<ul class="card-front-stats">${statList(card).slice(0, 3).map(stat => `<li>${escape(stat)}</li>`).join("")}</ul>` : ""}
-  ${actionButtons(card, options.interactive)}
+  ${spellSlotControl(card, options.spellSlot)}${actionButtons(card, options.interactive, options.spellSlot)}
 </div>`;
 
 const back = (card, options) => `<div class="card-face card-face--back">
@@ -44,7 +60,7 @@ const back = (card, options) => `<div class="card-face card-face--back">
     <button data-action="adjust-health" data-id="${card.id}" data-amount="-1">−1</button>
     <button data-action="adjust-health" data-id="${card.id}" data-amount="1">+1</button>
     <button data-action="adjust-health" data-id="${card.id}" data-amount="5">+5</button></div></div>` : ""}
-  ${actionButtons(card, true)}
+  ${spellSlotControl(card, options.spellSlot)}${actionButtons(card, true, options.spellSlot)}
   <section class="card-dm-notes"><b>PRIVATE DM INFORMATION</b><p>${escape(card.dmText || "Use the player-facing description and card rules.")}</p></section>
 </div>`;
 
