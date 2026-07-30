@@ -7,7 +7,7 @@ import { loadState, saveState, updateState, findCard } from "./state.js?v=unifie
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
 import { library } from "./libraryModel.js";
-import { tableView } from "./tableView.js?v=unified-board-2";
+import { tableView } from "./tableView.js?v=unified-board-3";
 import { handleGameBoardButton } from "./gameBoardController.js";
 
 let state = loadState();
