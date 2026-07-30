@@ -13,6 +13,9 @@ export const loadState = () => {
     state.dmFrontCardIds ||= [];
     state.libraryBackIds ||= [];
     state.spellSlotByCard ||= {};
+    state.readyByEntryId ||= {};
+    state.reactionSpentCardIds ||= [];
+    state.readyHistory ||= [];
     const legacyPreview = state.players.find(player => player.id === "player-preview");
     if (legacyPreview) {
       // Older builds stored the DM preview as a real player. Migrate that
