@@ -1,8 +1,11 @@
+import { findAdventure } from "./adventures.js";
+
 export const tableHeaderView = state => {
   const isDm = state.identity?.role === "dm";
+  const adventure = findAdventure(state.adventureId);
   return `<header class="game-command">
     <a class="game-brand" href="#" aria-label="Dungeon Cards home">
-      <span>DC</span><div><b>DUNGEON CARDS</b><small>THE HEARTHGLOW WISH</small></div>
+      <span>DC</span><div><b>DUNGEON CARDS</b><small>${adventure?.title || "SHOWCASE · CREATE · PLAY"}</small></div>
     </a>
     <div class="game-status">
       <span class="status-rune">✦</span>

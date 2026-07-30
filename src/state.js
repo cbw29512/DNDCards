@@ -1,5 +1,6 @@
 import { allCards, cards, rooms } from "./data.js";
 import { createState } from "./schema.js";
+import { findAdventure } from "./adventures.js";
 
 const STORAGE_KEY = "dungeon-cards-standalone-v1";
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
@@ -59,6 +60,40 @@ export const updateState = (state, action) => {
       }
       next.mode = action.value;
     }
+    if (action.type === "load-adventure") {
+      const adventure = findAdventure(action.id);
+      if (!adventure) throw new Error("That adventure pack could not be found.");
+      next.adventureId = adventure.id;
+      next.adventureComplete = false;
+      next.completedRoomIds = [];
+      next.roomId = adventure.roomIds[0];
+      for (const roomId of adventure.roomIds) {
+        next.placedByRoom[roomId] = cards.filter(card => card.room === roomId).map(card => card.id);
+      }
+      next.revealedIds = [];
+      next.activeEventId = null;
+    }
+    if (action.type === "next-room" || action.type === "previous-room") {
+      const adventure = findAdventure(next.adventureId);
+      if (!adventure) throw new Error("Load an adventure before changing rooms.");
+      const current = adventure.roomIds.indexOf(next.roomId);
+      const offset = action.type === "next-room" ? 1 : -1;
+      if (action.type === "next-room" && !next.completedRoomIds.includes(next.roomId)) {
+        next.completedRoomIds.push(next.roomId);
+      }
+      const target = current + offset;
+      if (target >= adventure.roomIds.length) {
+        next.adventureComplete = true;
+      } else if (target >= 0) {
+        next.roomId = adventure.roomIds[target];
+        next.revealedIds = [];
+        next.activeEventId = null;
+      }
+    }
+    if (action.type === "complete-room" && !next.completedRoomIds.includes(next.roomId)) {
+      next.completedRoomIds.push(next.roomId);
+    }
+    if (action.type === "resume-adventure") next.adventureComplete = false;
     if (action.type === "room") {
       next.roomId = action.id;
       next.revealedIds = [];
