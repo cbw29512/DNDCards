@@ -24,7 +24,7 @@ const escapeAttribute = value => String(value).replace(/[&<>"']/g, char =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
 
 const libraryCard = (card, backIds) => {
-  if (card.kind === "reference") return symbolCardView("symbol-card--library");
+  if (card.id === "REF-001") return symbolCardView("symbol-card--library");
   const isBack = backIds.includes(card.id);
   const abilityNames = ["STR","DEX","CON","INT","WIS","CHA"];
   const abilityRow = card.abilities?.length === 6
