@@ -1,5 +1,6 @@
-import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=card-import-1";
+import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=catalog-expand-1";
 import { symbolCardView } from "./symbolCardView.js";
+import { spellActionAtLevel, spellSlotOptions } from "./spellUpcast.js";
 
 const labels = {
   all: "All cards", room: "Rooms", npc: "NPCs", monster: "Monsters",
@@ -23,29 +24,45 @@ const slotNames = {
 const escapeAttribute = value => String(value).replace(/[&<>"']/g, char =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
 
-const libraryCard = (card, backIds) => {
+const spellSlotControl = (card, selectedLevel) => {
+  const options = spellSlotOptions(card, selectedLevel);
+  if (!options.length) return "";
+  return `<label class="spell-slot-picker"><span>CAST USING</span>
+    <select data-action="select-spell-slot" data-card-id="${card.id}"
+      aria-label="Spell slot for ${escapeAttribute(card.title)}">
+      ${options.map(option => `<option value="${option.level}" ${option.selected ? "selected" : ""}>
+        Level ${option.level}${option.level === options[0].level ? " (base)" : ""}
+      </option>`).join("")}
+    </select></label>`;
+};
+
+const libraryCard = (card, backIds, spellSlotByCard) => {
   if (card.id === "REF-001") return symbolCardView("symbol-card--library");
   const isBack = backIds.includes(card.id);
   const abilityNames = ["STR","DEX","CON","INT","WIS","CHA"];
   const abilityRow = card.abilities?.length === 6
     ? `<div class="wild-abilities">${card.abilities.map((score, index) =>
       `<span><small>${abilityNames[index]}</small><b>${score}</b></span>`).join("")}</div>` : "";
+  const selectedSlot = spellSlotByCard?.[card.id];
   const actionButtons = card.actions?.length
-    ? `<div class="wild-actions">${card.actions.map(action => `<button data-action="roll-card-action"
+    ? `<div class="wild-actions">${card.actions.map(baseAction => {
+      const action = spellActionAtLevel(card, baseAction, selectedSlot);
+      return `<button data-action="roll-card-action"
         data-card-id="${card.id}" data-id="${action.id}">
         <b>${action.icon} ${action.label}</b><small>${action.roll}${action.damage ? ` · ${action.damage}` : ""}</small>
-      </button>`).join("")}</div>` : "";
+      </button>`;
+    }).join("")}</div>` : "";
   return `<article class="library-card library-card--${card.kind} library-card--${isBack ? "back" : "front"}"
     data-action="flip-library-card" data-id="${card.id}" role="button" tabindex="0"
     aria-label="Flip ${escapeAttribute(card.title)} to its ${isBack ? "player front" : "DM back"}">
     <div class="library-card__band">
       <b>${icons[card.kind]}</b><span><small>${slotNames[card.kind] || card.kind}</small>
-      <strong>${card.title}</strong></span>
+      <strong class="${card.title.length > 24 ? "card-title--long" : ""}">${card.title}</strong></span>
     </div>
     <div class="library-card__body"><small>${isBack ? "PRIVATE DM SIDE" : "PLAYER SIDE"} · ${card.roomNumber ? `ROOM ${card.roomNumber} · ` : ""}${card.id}</small>
       <p>${isBack ? card.dmText || "Use the player-facing description and the listed card rules." : card.playerText}</p>
       ${card.quickStats?.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
-      ${isBack ? `${abilityRow}${actionButtons}` : ""}
+      ${isBack ? `${spellSlotControl(card, selectedSlot)}${abilityRow}${actionButtons}` : ""}
       <footer>↻ Click card to view ${isBack ? "player front" : "DM back"}</footer>
     </div>
   </article>`;
@@ -53,6 +70,7 @@ const libraryCard = (card, backIds) => {
 
 export const libraryView = (query = "", kind = "all", state = {}) => {
   const matches = filterLibrary(library.cards, query, kind);
+  const visibleMatches = matches.slice(0, 120);
   const backIds = state.libraryBackIds || [];
   const countFor = target => target === "all"
     ? library.cards.length : library.cards.filter(card => card.kind === target).length;
@@ -70,7 +88,11 @@ export const libraryView = (query = "", kind = "all", state = {}) => {
     <section class="catalog-results">
       <header><div><small>${labels[kind].toUpperCase()}</small><h2>${matches.length} card${matches.length === 1 ? "" : "s"}</h2></div>
         <p>${library.rejected.length === 0 ? "✓ Catalog validation passed · No duplicates" : `${library.rejected.length} rejected records`}</p></header>
-      <div class="catalog-grid">${matches.length ? matches.map(card => libraryCard(card, backIds)).join("") : `
+      ${matches.length > visibleMatches.length
+        ? `<p class="catalog-limit">Showing the first ${visibleMatches.length} matches. Use search or a category to narrow the library.</p>`
+        : ""}
+      <div class="catalog-grid">${visibleMatches.length ? visibleMatches.map(card =>
+        libraryCard(card, backIds, state.spellSlotByCard || {})).join("") : `
         <div class="catalog-empty"><b>No cards found.</b><span>Try another word or category.</span></div>`}</div>
       ${kind === "wild-shape" ? `<footer class="catalog-license">Creature statistics are from the SRD 5.1,
         licensed under CC BY 4.0. Wild Shape eligibility shown here is configured for a level-6
