@@ -20,8 +20,9 @@ const slotNames = {
 const escapeAttribute = value => String(value).replace(/[&<>"']/g, char =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
 
-const libraryCard = card => {
+const libraryCard = (card, backIds) => {
   if (card.kind === "reference") return symbolCardView("symbol-card--library");
+  const isBack = backIds.includes(card.id);
   const abilityNames = ["STR","DEX","CON","INT","WIS","CHA"];
   const abilityRow = card.abilities?.length === 6
     ? `<div class="wild-abilities">${card.abilities.map((score, index) =>
@@ -31,22 +32,25 @@ const libraryCard = card => {
         data-card-id="${card.id}" data-id="${action.id}">
         <b>${action.icon} ${action.label}</b><small>${action.roll}${action.damage ? ` · ${action.damage}` : ""}</small>
       </button>`).join("")}</div>` : "";
-  return `<article class="library-card library-card--${card.kind}">
+  return `<article class="library-card library-card--${card.kind} library-card--${isBack ? "back" : "front"}"
+    data-action="flip-library-card" data-id="${card.id}" role="button" tabindex="0"
+    aria-label="Flip ${escapeAttribute(card.title)} to its ${isBack ? "player front" : "DM back"}">
     <div class="library-card__band">
       <b>${icons[card.kind]}</b><span><small>${slotNames[card.kind] || card.kind}</small>
       <strong>${card.title}</strong></span>
     </div>
-    <div class="library-card__body"><small>${card.roomNumber ? `ROOM ${card.roomNumber} · ` : ""}${card.id} · ${card.source}</small>
-      <p>${card.playerText}</p>
+    <div class="library-card__body"><small>${isBack ? "PRIVATE DM SIDE" : "PLAYER SIDE"} · ${card.roomNumber ? `ROOM ${card.roomNumber} · ` : ""}${card.id}</small>
+      <p>${isBack ? card.dmText || "Use the player-facing description and the listed card rules." : card.playerText}</p>
       ${card.quickStats.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
-      ${abilityRow}${actionButtons}
-      ${card.dmText ? `<details><summary>${card.kind === "wild-shape" ? "Full beast rules" : "View private DM side"}</summary><p>${card.dmText}</p></details>` : ""}
+      ${isBack ? `${abilityRow}${actionButtons}` : ""}
+      <footer>↻ Click card to view ${isBack ? "player front" : "DM back"}</footer>
     </div>
   </article>`;
 };
 
-export const libraryView = (query = "", kind = "all") => {
+export const libraryView = (query = "", kind = "all", state = {}) => {
   const matches = filterLibrary(library.cards, query, kind);
+  const backIds = state.libraryBackIds || [];
   const countFor = target => target === "all"
     ? library.cards.length : library.cards.filter(card => card.kind === target).length;
   return `<main class="catalog-page">
@@ -63,7 +67,7 @@ export const libraryView = (query = "", kind = "all") => {
     <section class="catalog-results">
       <header><div><small>${labels[kind].toUpperCase()}</small><h2>${matches.length} card${matches.length === 1 ? "" : "s"}</h2></div>
         <p>${library.rejected.length === 0 ? "✓ Catalog validation passed · No duplicates" : `${library.rejected.length} rejected records`}</p></header>
-      <div class="catalog-grid">${matches.length ? matches.map(libraryCard).join("") : `
+      <div class="catalog-grid">${matches.length ? matches.map(card => libraryCard(card, backIds)).join("") : `
         <div class="catalog-empty"><b>No cards found.</b><span>Try another word or category.</span></div>`}</div>
       ${kind === "wild-shape" ? `<footer class="catalog-license">Creature statistics are from the SRD 5.1,
         licensed under CC BY 4.0. Wild Shape eligibility shown here is configured for a level-6

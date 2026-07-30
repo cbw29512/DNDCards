@@ -50,7 +50,9 @@ const back = (card, options) => `<div class="card-face card-face--back">
 
 export const cardView = (card, options = {}) => {
   const face = options.face === "back" ? "back" : "front";
-  return `<article class="card card--${face} ${options.compact ? "card--compact" : ""}">
+  const flip = options.flip ? `data-action="flip-card" data-id="${escape(card.id)}" role="button" tabindex="0"
+    aria-label="Flip ${escape(card.title)} to its ${face === "back" ? "player front" : "DM back"}"` : "";
+  return `<article class="card card--${face} ${options.compact ? "card--compact" : ""}" ${flip}>
     ${face === "back" ? back(card, options) : front(card, options)}
   </article>
   ${options.action ? `<button class="card-primary-action" data-action="${options.action}" data-id="${card.id}">${escape(options.label)}</button>` : ""}`;

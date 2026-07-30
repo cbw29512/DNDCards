@@ -11,6 +11,7 @@ export const loadState = () => {
     state.equipmentByPlayer ||= {};
     state.pendingItemsByPlayer ||= {};
     state.dmFrontCardIds ||= [];
+    state.libraryBackIds ||= [];
     for (const room of rooms) {
       state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
     }

@@ -28,6 +28,7 @@ export const createState = () => ({
   placedByRoom: {},
   revealedIds: [],
   dmFrontCardIds: [],
+  libraryBackIds: [],
   players: [],
   activePlayerId: null,
   equipmentByPlayer: {},

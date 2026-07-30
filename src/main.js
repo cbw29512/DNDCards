@@ -1,13 +1,13 @@
 import { allCards } from "./data.js";
-import { libraryCards } from "./dmView.js?v=slot-band-1";
+import { libraryCards } from "./dmView.js?v=card-click-1";
 import { rollInitiative, finishTurn } from "./initiative.js";
 import { landingView } from "./landingView.js";
-import { libraryView } from "./libraryView.js?v=slot-band-1";
-import { loadState, saveState, updateState, findCard } from "./state.js?v=slot-band-1";
+import { libraryView } from "./libraryView.js?v=card-click-1";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=card-click-1";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
 import { library } from "./libraryModel.js";
-import { tableView } from "./tableView.js?v=slot-band-1";
+import { tableView } from "./tableView.js?v=card-click-1";
 import { handleGameBoardButton } from "./gameBoardController.js";
 
 let state = loadState();
@@ -19,7 +19,7 @@ const root = document.querySelector("#app");
 const render = () => {
   try {
     if (state.screen === "library") {
-      root.innerHTML = `${libraryView(catalogQuery, catalogKind)}${rollResultView(state)}`;
+      root.innerHTML = `${libraryView(catalogQuery, catalogKind, state)}${rollResultView(state)}`;
       return;
     }
     if (state.screen !== "table") {

@@ -3,6 +3,7 @@ import { cardView } from "../src/cardView.js";
 import { cards } from "../src/data.js";
 import { createState } from "../src/schema.js";
 import { updateState } from "../src/state.js";
+import { libraryView } from "../src/libraryView.js";
 
 globalThis.localStorage = {
   value:null,
@@ -22,10 +23,15 @@ assert.doesNotMatch(front, /PRIVATE DM INFORMATION/);
 assert.match(back, /card--back/);
 assert.match(back, /PRIVATE DM INFORMATION/);
 assert.match(back, /Two gremlins act as one initiative group/);
+assert.match(cardView(monster, { face:"back", flip:true }), /data-action="flip-card"/);
 
 const initial = { ...createState(), identity:{ role:"dm", name:"Test" } };
 const flipped = updateState(initial, { type:"flip-card", id:monster.id });
 assert.deepEqual(flipped.dmFrontCardIds, [monster.id]);
 const restored = updateState(flipped, { type:"flip-card", id:monster.id });
 assert.deepEqual(restored.dmFrontCardIds, []);
+const libraryBack = updateState(restored, { type:"flip-library-card", id:"LOC-005" });
+assert.deepEqual(libraryBack.libraryBackIds, ["LOC-005"]);
+assert.match(libraryView("", "room", libraryBack), /library-card--back/);
+assert.match(libraryView("", "room", libraryBack), /PRIVATE DM SIDE/);
 console.log("Card face tests passed.");

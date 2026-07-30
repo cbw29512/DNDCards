@@ -1,6 +1,6 @@
-import { allCards, rooms } from "./data.js?v=slot-band-1";
+import { allCards, rooms } from "./data.js?v=card-click-1";
 import { SLOT_KINDS } from "./schema.js";
-import { cardView, emptyView } from "./cardView.js?v=slot-band-1";
+import { cardView, emptyView } from "./cardView.js?v=card-click-1";
 import { adventures, findAdventure } from "./adventures.js";
 
 export const dmView = state => {
@@ -40,7 +40,7 @@ export const dmView = state => {
         return `<section class="slot slot--${kind}"><header><div><small>${kindIcon[kind]} ${kind} SLOT</small><h2>${slotTitle[kind]}</h2></div>
           <button data-action="open-library" data-id="${kind}" aria-label="Add ${kind} card">+</button></header>
           <div class="card-row">${slotCards.length ? slotCards.map(card => `
-            <div>${cardView(card, { dm: true, face:"back", health: state.healthByCard[card.id], action: "reveal", label: state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal player face" })}
+            <div>${cardView(card, { dm: true, flip:true, face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back", health: state.healthByCard[card.id], action: "reveal", label: state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal player face" })}
             <button class="remove" data-action="remove" data-id="${card.id}">Remove</button></div>`).join("") : emptyView(`Add a ${kind} card`)}</div>
         </section>`;
       }).join("")}</div>
@@ -81,9 +81,9 @@ const eventView = state => {
   const event = allCards.find(card => card.id === state.activeEventId);
   return `<section class="event"><header><div><small>D10 LOCATION EVENT</small><h2>Heartbreak Inn</h2></div>
     <button data-action="event">Roll event</button></header>
-    ${event ? cardView(event, { dm: true, face:"back", action: "reveal", label: state.revealedIds.includes(event.id) ? "Hide from players" : "Reveal event" }) : ""}</section>`;
+    ${event ? cardView(event, { dm: true, flip:true, face:(state.dmFrontCardIds || []).includes(event.id) ? "front" : "back", action: "reveal", label: state.revealedIds.includes(event.id) ? "Hide from players" : "Reveal event" }) : ""}</section>`;
 };
 
 export const libraryCards = (state, kind) => allCards
   .filter(card => card.kind === kind)
-  .map(card => cardView(card, { action: "place", label: "Add to room" })).join("");
+  .map(card => cardView(card, { flip:true, face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back", action: "place", label: "Add to room" })).join("");

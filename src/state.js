@@ -1,8 +1,8 @@
 import { allCards, cards } from "./data.js";
 import { findAdventure } from "./adventures.js";
 import { updateEquipmentState } from "./equipmentState.js";
-import { loadState, saveState } from "./stateStorage.js?v=slot-band-1";
-import { updateGameBoardState } from "./gameBoardState.js?v=slot-band-1";
+import { loadState, saveState } from "./stateStorage.js?v=card-click-1";
+import { updateGameBoardState } from "./gameBoardState.js?v=card-click-1";
 
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
 export { loadState, saveState };

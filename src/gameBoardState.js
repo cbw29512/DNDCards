@@ -12,6 +12,13 @@ export const updateGameBoardState = (next, action) => {
       : [...next.dmFrontCardIds, action.id];
     return true;
   }
+  if (action.type === "flip-library-card") {
+    next.libraryBackIds ||= [];
+    next.libraryBackIds = next.libraryBackIds.includes(action.id)
+      ? next.libraryBackIds.filter(id => id !== action.id)
+      : [...next.libraryBackIds, action.id];
+    return true;
+  }
   if (action.type !== "preview-character") return false;
   if (next.identity?.role !== "dm") throw new Error("Only the DM can create preview characters.");
   let player = next.players.find(candidate => candidate.id === "player-preview");
