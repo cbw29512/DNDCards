@@ -25,9 +25,13 @@ const lane = (state, kind, title, icon, isDm) => {
       ${isDm ? `<button data-action="open-library" data-id="${kind}" aria-label="Add ${title}">＋ Add</button>` : ""}</header>
     <div class="board-lane__cards">${laneCards.length ? laneCards.map(card => `
       <div class="board-card">${cardView(card, isDm ? {
-        dm:true, health:state.healthByCard[card.id], action:"reveal",
-        label:state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal to players"
-      } : { health:state.healthByCard[card.id] })}
+        dm:true, face:state.dmFrontCardIds.includes(card.id) ? "front" : "back",
+        health:state.healthByCard[card.id]
+      } : { face:"front" })}
+      ${isDm ? `<div class="board-card-controls">
+        <button data-action="flip-card" data-id="${card.id}">${state.dmFrontCardIds.includes(card.id) ? "View DM back" : "View player front"}</button>
+        <button data-action="reveal" data-id="${card.id}">${state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal to players"}</button>
+      </div>` : ""}
       ${isDm && card.kind === "treasure" ? `<button class="send-item" data-action="send-item" data-id="${card.id}">Send to active player</button>` : ""}
       </div>`).join("") : emptyView(isDm ? `Add a ${kind} card` : `No ${title.toLowerCase()} revealed`)}</div>
   </section>`;
@@ -50,7 +54,7 @@ const playerRail = state => {
     <header><small>YOUR CHARACTER</small><h2>${player.name}</h2></header>
     ${state.identity?.role === "dm" ? `<nav class="hero-switcher" aria-label="Preview another pre-generated hero">
       ${characters.map(hero => `<button data-action="preview-character" data-id="${hero.id}" class="${hero.id === character.id ? "active" : ""}">${hero.title.split(" ")[0]}</button>`).join("")}</nav>` : ""}
-    ${cardView(character, { health:state.healthByCard[character.id] })}
+    ${cardView(character, { face:"front", interactive:true })}
     <div class="derived-stats"><span><b>🛡 ${derived.armorClass}</b><small>Armor Class</small></span>
       <span><b>⚡ ${derived.initiative >= 0 ? "+" : ""}${derived.initiative}</b><small>Initiative</small></span>
       <span><b>➟ ${derived.speed}</b><small>Speed</small></span></div>

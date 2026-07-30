@@ -10,6 +10,7 @@ export const loadState = () => {
     const state = { ...createState(), ...(saved || {}) };
     state.equipmentByPlayer ||= {};
     state.pendingItemsByPlayer ||= {};
+    state.dmFrontCardIds ||= [];
     for (const room of rooms) {
       state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
     }

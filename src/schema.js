@@ -27,6 +27,7 @@ export const createState = () => ({
   roomId: "square",
   placedByRoom: {},
   revealedIds: [],
+  dmFrontCardIds: [],
   players: [],
   activePlayerId: null,
   equipmentByPlayer: {},

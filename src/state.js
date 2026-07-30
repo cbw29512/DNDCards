@@ -2,6 +2,7 @@ import { allCards, cards } from "./data.js";
 import { findAdventure } from "./adventures.js";
 import { updateEquipmentState } from "./equipmentState.js";
 import { loadState, saveState } from "./stateStorage.js";
+import { updateGameBoardState } from "./gameBoardState.js";
 
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
 export { loadState, saveState };
@@ -38,10 +39,7 @@ export const updateState = (state, action) => {
       next.mode = action.value;
     }
     if (action.type === "table-tab") next.tableTab = action.id;
-    if (action.type === "board-perspective") {
-      if (next.identity?.role !== "dm") throw new Error("Only the DM can switch table previews.");
-      next.boardPerspective = action.id;
-    }
+    updateGameBoardState(next, action);
     if (action.type === "load-adventure") {
       const adventure = findAdventure(action.id);
       if (!adventure) throw new Error("That adventure pack could not be found.");
@@ -103,18 +101,6 @@ export const updateState = (state, action) => {
       next.pendingItemsByPlayer[id] = [];
     }
     if (action.type === "select-player") next.activePlayerId = action.id;
-    if (action.type === "preview-character") {
-      if (next.identity?.role !== "dm") throw new Error("Only the DM can create preview characters.");
-      let player = next.players.find(candidate => candidate.id === "player-preview");
-      if (!player) {
-        player = { id:"player-preview", name:"Player Preview", characterId:null, backpackIds:[] };
-        next.players.push(player);
-      }
-      player.characterId = action.id;
-      next.activePlayerId = player.id;
-      next.equipmentByPlayer[player.id] ||= {};
-      next.pendingItemsByPlayer[player.id] ||= [];
-    }
     if (action.type === "claim") {
       const player = next.players.find(player => player.id === next.activePlayerId);
       if (player && !next.players.some(other => other.characterId === action.id)) {

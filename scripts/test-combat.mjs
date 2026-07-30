@@ -12,8 +12,8 @@ try {
   assert.equal(result.critical, true);
   assert.equal(result.damage.dice.length, 2);
   const gremlin = allCards.find(candidate => candidate.id === "monster-gremlin");
-  assert.match(cardView(gremlin), /data-action="roll-card-action"/);
-  assert.match(cardView(gremlin), /Berry Splat/);
+  assert.match(cardView(gremlin, { face:"back" }), /data-action="roll-card-action"/);
+  assert.match(cardView(gremlin, { face:"back" }), /Berry Splat/);
   console.log("Combat dice tests passed.");
 } catch (error) {
   console.error("[Dungeon Cards] Combat test failed.", error);

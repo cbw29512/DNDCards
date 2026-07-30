@@ -18,6 +18,7 @@ export const cards = [
   card("monster-gremlin", "monster", "Jam Gremlin", "inn",
     "A jam-smeared creature springs from the pantry with a spoon held like a sword.",
     "Two gremlins act as one initiative group.", ["♥ 18", "🛡 13", "⚔ Spoon +4 · 1d6+2"], {
+      art:"assets/jam-gremlin-card-art.webp",
       initiative: 2, abilities: [8,15,12,10,11,14],
       actions: [
         { id:"spoon", label:"Spoon Swipe", icon:"⚔", kind:"attack", roll:"1d20+4", damage:"1d6+2", range:"5 ft.", cost:"Action" },
