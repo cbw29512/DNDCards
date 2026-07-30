@@ -32,6 +32,7 @@ export const createState = () => ({
   revealedIds: [],
   dmFrontCardIds: [],
   libraryBackIds: [],
+  spellSlotByCard: {},
   players: [],
   activePlayerId: null,
   equipmentByPlayer: {},
