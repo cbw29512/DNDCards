@@ -5,7 +5,7 @@ import { playerView } from "./playerView.js?v=npc-lane-1";
 import { printView } from "./printView.js?v=npc-lane-1";
 import { rollResultView } from "./rollResultView.js";
 import { symbolCardView } from "./symbolCardView.js";
-import { tableHeaderView } from "./tableHeaderView.js";
+import { tableHeaderView } from "./tableHeaderView.js?v=unified-board-2";
 import { findAdventure } from "./adventures.js";
 import { gameBoardView } from "./gameBoardView.js?v=unified-board-2";
 
