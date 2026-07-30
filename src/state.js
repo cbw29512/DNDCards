@@ -110,7 +110,13 @@ export const updateState = (state, action) => {
       }
     }
     updateEquipmentState(next, action, allCards);
-    if (action.type === "event") next.activeEventId = `event-${Math.floor(Math.random() * 10) + 1}`;
+    if (action.type === "event") {
+      const roomEvents = allCards.filter(card =>
+        card.kind === "event" && card.room === next.roomId
+      );
+      if (!roomEvents.length) throw new Error("This location has no random event deck.");
+      next.activeEventId = roomEvents[Math.floor(Math.random() * roomEvents.length)].id;
+    }
     if (action.type === "adjust-health") {
       const health = next.healthByCard[action.id];
       if (!health) throw new Error("This card does not track health.");
