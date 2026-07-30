@@ -1,5 +1,6 @@
-import { allCards, characters } from "./data.js?v=npc-lane-1";
-import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
+import { allCards, characters, rooms } from "./data.js?v=unified-board-1";
+import { findAdventure } from "./adventures.js";
+import { cardView, emptyView } from "./cardView.js?v=unified-board-1";
 import { deriveCharacter } from "./characterEngine.js";
 import { diceTrayView } from "./diceTrayView.js";
 
@@ -8,7 +9,9 @@ const LANES = [
   { kind:"npc", title:"NPCs", icon:"♟" },
   { kind:"monster", title:"Monsters", icon:"☠" },
   { kind:"trap", title:"Traps", icon:"⚠" },
-  { kind:"treasure", title:"Treasure", icon:"◆" }
+  { kind:"treasure", title:"Treasure", icon:"◆" },
+  { kind:"clue", title:"Clues", icon:"⌕" },
+  { kind:"event", title:"Events", icon:"✦" }
 ];
 const SLOTS = [
   ["head","Head"], ["neck","Neck"], ["armor","Armor"], ["back","Back"],
@@ -18,12 +21,23 @@ const SLOTS = [
 
 const lane = (state, kind, title, icon, isDm) => {
   const ids = state.placedByRoom[state.roomId] || [];
-  const laneCards = ids.map(id => allCards.find(card => card.id === id))
+  const cardIds = kind === "event"
+    ? (state.activeEventId ? [state.activeEventId] : [])
+    : ids;
+  const laneCards = cardIds.map(id => allCards.find(card => card.id === id))
     .filter(card => card?.kind === kind)
     .filter(card => isDm || state.revealedIds.includes(card.id));
+  const hasRoomEvents = allCards.some(card =>
+    card.kind === "event" && card.room === state.roomId
+  );
+  const addControl = kind === "event"
+    ? hasRoomEvents
+      ? `<button data-action="event" aria-label="Roll a location event">⚄ Roll</button>`
+      : ""
+    : `<button data-action="open-library" data-id="${kind}" aria-label="Add ${title}">＋ Add</button>`;
   return `<section class="board-lane board-lane--${kind}">
     <header><span>${icon}</span><div><small>${kind === "room" ? "ACTIVE SCENE" : "ENCOUNTER LANE"}</small><h2>${title}</h2></div>
-      ${isDm ? `<button data-action="open-library" data-id="${kind}" aria-label="Add ${title}">＋ Add</button>` : ""}</header>
+      ${isDm ? addControl : ""}</header>
     <div class="board-lane__cards">${laneCards.length ? laneCards.map(card => `
       <div class="board-card">${cardView(card, isDm ? {
         dm:true, face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back",
@@ -38,22 +52,28 @@ const lane = (state, kind, title, icon, isDm) => {
 };
 
 const playerRail = state => {
-  const player = state.players.find(candidate => candidate.id === state.activePlayerId);
+  const activePlayer = state.players.find(candidate => candidate.id === state.activePlayerId);
+  const player = activePlayer?.characterId
+    ? activePlayer
+    : state.identity?.role === "dm" && state.previewCharacterId
+      ? { id:"dm-preview", name:"Player Preview", characterId:state.previewCharacterId, backpackIds:[] }
+      : activePlayer;
   if (!player?.characterId) return `<aside class="character-sheet character-picker">
     <header><small>PRE-GENERATED HEROES</small><h2>Choose a hero</h2>
       <p>${state.identity?.role === "dm" ? "Select a character to inspect the complete player screen." : "Claim an available hero from the party panel."}</p></header>
     ${state.identity?.role === "dm" ? characters.map(character => `<button data-action="preview-character" data-id="${character.id}">
       <b>${character.title}</b><span>${character.playerText}</span></button>`).join("") : ""}</aside>`;
   const character = characters.find(card => card.id === player.characterId);
-  const equipment = state.equipmentByPlayer[player.id] || {};
+  const equipment = player.id === "dm-preview" ? {} : state.equipmentByPlayer[player.id] || {};
   const equipped = Object.values(equipment).map(id => allCards.find(card => card.id === id)).filter(Boolean);
   const derived = deriveCharacter(character, equipped);
   const backpack = (player.backpackIds || []).map(id => allCards.find(card => card.id === id)).filter(Boolean);
-  const pending = (state.pendingItemsByPlayer[player.id] || []).map(id => allCards.find(card => card.id === id)).filter(Boolean);
+  const pending = player.id === "dm-preview" ? [] :
+    (state.pendingItemsByPlayer[player.id] || []).map(id => allCards.find(card => card.id === id)).filter(Boolean);
   return `<aside class="character-sheet">
     <header><small>YOUR CHARACTER</small><h2>${player.name}</h2></header>
     ${state.identity?.role === "dm" ? `<nav class="hero-switcher" aria-label="Preview another pre-generated hero">
-      ${characters.map(hero => `<button data-action="preview-character" data-id="${hero.id}" class="${hero.id === character.id ? "active" : ""}">${hero.title.split(" ")[0]}</button>`).join("")}</nav>` : ""}
+      ${characters.map(hero => `<button data-action="preview-character" data-id="${hero.id}" class="${player.id === "dm-preview" && hero.id === character.id ? "active" : ""}">${hero.title.split(" ")[0]}</button>`).join("")}</nav>` : ""}
     ${cardView(character, { face:"front", interactive:true })}
     <div class="derived-stats"><span><b>🛡 ${derived.armorClass}</b><small>Armor Class</small></span>
       <span><b>⚡ ${derived.initiative >= 0 ? "+" : ""}${derived.initiative}</b><small>Initiative</small></span>
@@ -77,11 +97,24 @@ const playerRail = state => {
 
 export const gameBoardView = state => {
   const isDm = state.identity?.role === "dm" && state.boardPerspective !== "player";
+  const adventure = findAdventure(state.adventureId);
+  const room = rooms.find(candidate => candidate.id === state.roomId);
+  const roomIndex = adventure?.roomIds.indexOf(state.roomId) ?? -1;
   return `<main class="game-board">
     ${diceTrayView(state)}
     <div class="game-board__layout">
       <section class="encounter-board">
-        <header><div><small>LIVE CARD TABLE</small><h1>Game Board</h1></div>
+        ${isDm && adventure ? `<nav class="board-runner" aria-label="Adventure room controls">
+          <button data-action="previous-room" ${roomIndex <= 0 ? "disabled" : ""}>← Previous</button>
+          <div><small>ROOM ${roomIndex + 1} OF ${adventure.roomIds.length}</small>
+            <strong>${room?.title || "Current room"}</strong>
+            <span>${adventure.roomIds.map((id, index) => `<i class="${id === state.roomId ? "current" : state.completedRoomIds.includes(id) ? "complete" : ""}">${index + 1}</i>`).join("")}</span>
+          </div>
+          <button data-action="complete-room" class="${state.completedRoomIds.includes(state.roomId) ? "complete" : ""}">
+            ${state.completedRoomIds.includes(state.roomId) ? "✓ Complete" : "Mark complete"}</button>
+          <button data-action="next-room">${roomIndex === adventure.roomIds.length - 1 ? "Finish adventure →" : "Next room →"}</button>
+        </nav>` : ""}
+        <header><div><small>${room ? `ROOM ${room.number} · LIVE CARD TABLE` : "LIVE CARD TABLE"}</small><h1>${room?.title || "Game Board"}</h1></div>
           <span class="${isDm ? "dm-vision" : "player-vision"}">◉ ${isDm ? "DM CONTROL" : "PLAYER VIEW"}</span></header>
         <div class="board-lanes">${LANES.map(item => lane(state, item.kind, item.title, item.icon, isDm)).join("")}</div>
       </section>
