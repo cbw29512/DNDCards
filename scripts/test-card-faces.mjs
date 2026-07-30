@@ -34,4 +34,8 @@ const libraryBack = updateState(restored, { type:"flip-library-card", id:"LOC-00
 assert.deepEqual(libraryBack.libraryBackIds, ["LOC-005"]);
 assert.match(libraryView("", "room", libraryBack), /library-card--back/);
 assert.match(libraryView("", "room", libraryBack), /PRIVATE DM SIDE/);
+const references = libraryView("", "reference", libraryBack);
+assert.match(references, /SYMBOL KEY/);
+assert.match(references, /Strength Saving Throw/);
+assert.equal((references.match(/symbol-card--library/g) || []).length, 1);
 console.log("Card face tests passed.");
