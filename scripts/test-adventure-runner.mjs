@@ -33,6 +33,20 @@ try {
     state = updateState(state, { type:"next-room" });
   }
   assert.equal(state.adventureComplete, true);
+
+  localStorage.value = JSON.stringify({
+    players:[
+      { id:"player-preview", name:"Player Preview", characterId:"pc-wendy", backpackIds:[] },
+      { id:"player-real", name:"Real Player", characterId:"pc-bob", backpackIds:[] }
+    ],
+    activePlayerId:"player-preview",
+    equipmentByPlayer:{ "player-preview":{} },
+    pendingItemsByPlayer:{ "player-preview":[] }
+  });
+  const migrated = loadState();
+  assert.equal(migrated.previewCharacterId, "pc-wendy");
+  assert.deepEqual(migrated.players.map(player => player.id), ["player-real"]);
+  assert.equal(migrated.activePlayerId, "player-real");
   console.log("Adventure runner tests passed.");
 } catch (error) {
   console.error("[Dungeon Cards] Adventure runner test failed.", error);
