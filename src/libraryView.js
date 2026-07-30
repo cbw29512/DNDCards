@@ -1,20 +1,23 @@
-import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js";
+import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=card-import-1";
 import { symbolCardView } from "./symbolCardView.js";
 
 const labels = {
   all: "All cards", room: "Rooms", npc: "NPCs", monster: "Monsters",
   trap: "Traps", treasure: "Treasure", clue: "Clues", event: "Events",
-  character: "Pre-gen heroes", reference: "Reference", "wild-shape": "Wild Shapes"
+  character: "Pre-gen heroes", weapon: "Weapons & rolls", spell: "Spells",
+  reference: "Reference", "wild-shape": "Wild Shapes"
 };
 
 const icons = {
   room: "⌂", npc: "♟", monster: "☠", trap: "⚠", treasure: "◆",
-  clue: "⌕", event: "✦", character: "♞", reference: "?", "wild-shape": "🐾"
+  clue: "⌕", event: "✦", character: "♞", weapon: "⚔", spell: "✦",
+  reference: "?", "wild-shape": "🐾"
 };
 const slotNames = {
   room:"Location slot", npc:"NPC slot", monster:"Monster slot", trap:"Trap slot",
   treasure:"Treasure slot", clue:"Clue slot", event:"Event slot",
-  character:"Character slot", "wild-shape":"Wild Shape slot"
+  character:"Character slot", weapon:"Action card", spell:"Spell card",
+  "wild-shape":"Wild Shape slot"
 };
 
 const escapeAttribute = value => String(value).replace(/[&<>"']/g, char =>
@@ -41,7 +44,7 @@ const libraryCard = (card, backIds) => {
     </div>
     <div class="library-card__body"><small>${isBack ? "PRIVATE DM SIDE" : "PLAYER SIDE"} · ${card.roomNumber ? `ROOM ${card.roomNumber} · ` : ""}${card.id}</small>
       <p>${isBack ? card.dmText || "Use the player-facing description and the listed card rules." : card.playerText}</p>
-      ${card.quickStats.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
+      ${card.quickStats?.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
       ${isBack ? `${abilityRow}${actionButtons}` : ""}
       <footer>↻ Click card to view ${isBack ? "player front" : "DM back"}</footer>
     </div>
@@ -73,6 +76,11 @@ export const libraryView = (query = "", kind = "all", state = {}) => {
         licensed under CC BY 4.0. Wild Shape eligibility shown here is configured for a level-6
         Legacy Circle of the Moon Druid: CR 2 or lower, swimming allowed, flying forms locked,
         and the form must be one the character has seen.</footer>` : ""}
+      ${["character","weapon","spell","reference","monster","trap","treasure"].includes(kind)
+        ? `<footer class="catalog-license">Imported cards identify their 2014 SRD 5.1,
+          2024 SRD 5.2.1, or homebrew source. SRD material is used under CC BY 4.0.
+          Edition labels remain visible so rules from different editions are not mixed accidentally.</footer>`
+        : ""}
     </section>
   </main>`;
 };
