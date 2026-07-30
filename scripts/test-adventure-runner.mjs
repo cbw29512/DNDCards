@@ -18,6 +18,14 @@ try {
   assert.deepEqual(state.completedRoomIds, ["square"]);
   assert.deepEqual(state.revealedIds, []);
   assert.ok(state.placedByRoom.inn.includes("monster-gremlin"));
+  assert.ok(state.placedByRoom.inn.includes("clue-toast"));
+  assert.equal(state.players.length, 0);
+  state.identity = { role:"dm", name:"DM" };
+  state = updateState(state, { type:"preview-character", id:"pc-wendy" });
+  assert.equal(state.previewCharacterId, "pc-wendy");
+  assert.equal(state.players.length, 0, "DM character preview must not create a player");
+  state = updateState(state, { type:"event" });
+  assert.match(state.activeEventId, /^event-\d+$/);
   state = updateState(state, { type:"previous-room" });
   assert.equal(state.roomId, "square");
   for (const roomId of ["inn", "chapel", "shop"]) {
