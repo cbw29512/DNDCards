@@ -5,9 +5,9 @@ export const lobbyView = state => {
   const active = state.players.find(player => player.id === state.activePlayerId);
   const claimed = new Set(state.players.map(player => player.characterId).filter(Boolean));
   return `
-    <section class="lobby">
+    <section class="lobby party-panel">
       <header><div><small>TABLE CODE</small><strong>${state.sessionCode}</strong></div>
-      <span>${state.mode === "dm" ? "DM sees the full table roster." : "Player information only."}</span></header>
+      <span>${state.mode === "dm" ? "♟ PARTY ROSTER · DM VIEW" : "♟ YOUR PARTY"}</span></header>
       <form id="join-form">
         <label>Player name <input name="name" required maxlength="30" placeholder="Enter a name"></label>
         <button>Join table</button>

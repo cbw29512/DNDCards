@@ -53,7 +53,12 @@ export const updateState = (state, action) => {
       next.screen = "landing";
       next.identity = null;
     }
-    if (action.type === "mode") next.mode = action.value;
+    if (action.type === "mode") {
+      if (next.identity?.role !== "dm" && action.value === "dm") {
+        throw new Error("Only the Dungeon Master can open the private build screen.");
+      }
+      next.mode = action.value;
+    }
     if (action.type === "room") {
       next.roomId = action.id;
       next.revealedIds = [];

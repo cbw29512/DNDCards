@@ -1,18 +1,14 @@
 import { allCards } from "./data.js";
-import { dmView, libraryCards } from "./dmView.js";
+import { libraryCards } from "./dmView.js";
 import { rollInitiative, finishTurn } from "./initiative.js";
-import { initiativeView } from "./initiativeView.js";
 import { landingView } from "./landingView.js";
 import { libraryView } from "./libraryView.js";
-import { lobbyView } from "./lobbyView.js";
-import { playerView } from "./playerView.js";
-import { printView } from "./printView.js";
 import { loadState, saveState, updateState } from "./state.js";
-import { symbolCardView } from "./symbolCardView.js";
 import { executeCardAction } from "./diceEngine.js";
 import { findCard } from "./state.js";
 import { rollResultView } from "./rollResultView.js";
 import { library } from "./libraryModel.js";
+import { tableView } from "./tableView.js";
 
 let state = loadState();
 let libraryKind = null;
@@ -23,24 +19,14 @@ const root = document.querySelector("#app");
 const render = () => {
   try {
     if (state.screen === "library") {
-      root.innerHTML = libraryView(catalogQuery, catalogKind);
+      root.innerHTML = `${libraryView(catalogQuery, catalogKind)}${rollResultView(state)}`;
       return;
     }
     if (state.screen !== "table") {
       root.innerHTML = landingView(state.lastError);
       return;
     }
-    root.innerHTML = `<header class="hero"><a class="brand" href="#"><span>DC</span><div><b>DUNGEON CARDS</b><small>Build it. Reveal it. Play it.</small></div></a>
-      <nav><button data-action="mode" data-id="dm" class="${state.mode === "dm" ? "active" : ""}">DM table</button>
-      <button data-action="mode" data-id="player" class="${state.mode === "player" ? "active" : ""}">Player table</button>
-      <button data-action="symbols">Symbol key</button>
-      <button data-action="print" data-id="duplex">Print duplex</button><button data-action="print" data-id="home">Home sheets</button>
-      <button data-action="logout">Log out</button></nav></header>
-      <section class="adventure-title"><small>OFFICIAL STARTER ADVENTURE · LEVEL 3</small><h1>The Hearthglow Wish</h1>
-      <p>A cozy birthday mystery played entirely from cards.</p></section>
-      ${initiativeView(state)}${lobbyView(state)}${state.mode === "dm" ? dmView(state) : playerView(state)}
-      <dialog id="symbol-dialog" class="symbol-dialog"><button data-action="close-symbols" class="dialog-close" aria-label="Close">×</button>${symbolCardView()}</dialog>
-      ${rollResultView(state)}${printView(state)}`;
+    root.innerHTML = tableView(state);
     if (libraryKind) openLibrary(libraryKind);
   } catch (error) {
     console.error("[Dungeon Cards] Interface render failed.", error);
@@ -77,20 +63,14 @@ root.addEventListener("click", event => {
       saveState(state);
       return render();
     }
-    if (action === "close-roll") {
-      state.lastRoll = null; saveState(state); return render();
-    }
+    if (action === "close-roll") { state.lastRoll = null; saveState(state); return render(); }
     if (action === "adjust-health") return dispatch({ type:"adjust-health", id, amount:Number(button.dataset.amount) });
     if (action === "rest") return dispatch({ type:"rest", restType:id });
     if (action === "open-card-library") {
       state.screen = "library"; saveState(state); return render();
     }
-    if (action === "close-card-library") {
-      state.screen = "landing"; saveState(state); return render();
-    }
-    if (action === "filter-cards") {
-      catalogKind = id; return render();
-    }
+    if (action === "close-card-library") { state.screen = "landing"; saveState(state); return render(); }
+    if (action === "filter-cards") { catalogKind = id; return render(); }
     if (action === "symbols") return document.querySelector("#symbol-dialog").showModal();
     if (action === "close-symbols") return button.closest("dialog").close();
     if (action === "choose-login") {
