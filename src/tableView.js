@@ -1,4 +1,4 @@
-import { dmView } from "./dmView.js?v=npc-lane-1";
+import { dmView } from "./dmView.js?v=unified-board-2";
 import { initiativeView } from "./initiativeView.js";
 import { lobbyView } from "./lobbyView.js?v=npc-lane-1";
 import { playerView } from "./playerView.js?v=npc-lane-1";
@@ -7,7 +7,7 @@ import { rollResultView } from "./rollResultView.js";
 import { symbolCardView } from "./symbolCardView.js";
 import { tableHeaderView } from "./tableHeaderView.js";
 import { findAdventure } from "./adventures.js";
-import { gameBoardView } from "./gameBoardView.js?v=npc-lane-1";
+import { gameBoardView } from "./gameBoardView.js?v=unified-board-2";
 
 export const tableView = state => {
   const adventure = findAdventure(state.adventureId);
