@@ -1,4 +1,5 @@
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
+import { importedCatalog } from "./importedCatalog.js?v=card-import-1";
 
 const c = (id, kind, title, roomNumber, badge, playerText, dmText = "", quickStats = []) => ({
   id, kind, title, roomNumber, badge, playerText, dmText, quickStats,
@@ -45,5 +46,6 @@ export const rawLibraryCatalog = [
     ["09","The Forbidden Tunnel","Brindle remembers a service tunnel beneath the cellar leading toward the foundry district.","This creates a safe shortcut to Room 6."],
     ["10","The Truth Bell Cracks","The truth bell cracks and releases a wave of silver light.","Everyone may reroll one failed social or investigation check made in the inn."]
   ].map(([number,title,playerText,dmText]) => c(`EVENT-${number}`,"event",title,2,`Inn event ${Number(number)}`,playerText,dmText)),
-  ...wildShapeCatalog
+  ...wildShapeCatalog,
+  ...importedCatalog
 ];
