@@ -27,10 +27,13 @@ export const rollFormula = (formula, random = Math.random, critical = false) => 
   }
 };
 
-export const executeCardAction = (card, actionId, random = Math.random) => {
+export const executeCardAction = (card, actionId, random = Math.random, options = {}) => {
   try {
-    const action = card.actions?.find(candidate => candidate.id === actionId);
-    if (!action) throw new Error(`Unknown action ${actionId} on ${card.title}.`);
+    const baseAction = card.actions?.find(candidate => candidate.id === actionId);
+    if (!baseAction) throw new Error(`Unknown action ${actionId} on ${card.title}.`);
+    const action = options.transformAction
+      ? options.transformAction(card, baseAction, options.slotLevel)
+      : baseAction;
     if (action.kind === "attack") {
       const attack = rollFormula(action.roll, random);
       const critical = attack.dice[0] === 20;
