@@ -1,5 +1,5 @@
-import { allCards, characters } from "./data.js?v=card-faces-1";
-import { cardView, emptyView } from "./cardView.js?v=card-faces-1";
+import { allCards, characters } from "./data.js?v=card-faces-2";
+import { cardView, emptyView } from "./cardView.js?v=card-faces-2";
 import { deriveCharacter } from "./characterEngine.js";
 import { diceTrayView } from "./diceTrayView.js";
 
@@ -25,11 +25,11 @@ const lane = (state, kind, title, icon, isDm) => {
       ${isDm ? `<button data-action="open-library" data-id="${kind}" aria-label="Add ${title}">＋ Add</button>` : ""}</header>
     <div class="board-lane__cards">${laneCards.length ? laneCards.map(card => `
       <div class="board-card">${cardView(card, isDm ? {
-        dm:true, face:state.dmFrontCardIds.includes(card.id) ? "front" : "back",
+        dm:true, face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back",
         health:state.healthByCard[card.id]
       } : { face:"front" })}
       ${isDm ? `<div class="board-card-controls">
-        <button data-action="flip-card" data-id="${card.id}">${state.dmFrontCardIds.includes(card.id) ? "View DM back" : "View player front"}</button>
+        <button data-action="flip-card" data-id="${card.id}">${(state.dmFrontCardIds || []).includes(card.id) ? "View DM back" : "View player front"}</button>
         <button data-action="reveal" data-id="${card.id}">${state.revealedIds.includes(card.id) ? "Hide from players" : "Reveal to players"}</button>
       </div>` : ""}
       ${isDm && card.kind === "treasure" ? `<button class="send-item" data-action="send-item" data-id="${card.id}">Send to active player</button>` : ""}
