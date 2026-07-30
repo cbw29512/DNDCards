@@ -1,4 +1,4 @@
-import { allCards, cards } from "./data.js";
+import { allCards, cards } from "./data.js?v=character-art-1";
 import { findAdventure } from "./adventures.js";
 import { updateEquipmentState } from "./equipmentState.js";
 import { loadState, saveState } from "./stateStorage.js?v=unified-board-2";
@@ -39,6 +39,7 @@ export const updateState = (state, action) => {
       next.mode = action.value;
     }
     if (action.type === "table-tab") next.tableTab = action.id;
+    if (action.type === "set-character-query") next.characterQuery = String(action.value || "");
     if (action.type === "set-spell-slot") {
       next.spellSlotByCard ||= {};
       next.spellSlotByCard[action.id] = Number(action.value);

@@ -17,6 +17,16 @@ export const deriveCharacter = (character, equippedCards = []) => {
     for (const card of equippedCards) {
       for (const modifier of card.modifiers || []) {
         if (!(modifier.stat in derived)) continue;
+        if (modifier.operation === "armor") {
+          const dexterity = abilityModifier(character.abilities?.[1] || 10);
+          const dexterityBonus = modifier.dexterityMode === "full"
+            ? dexterity
+            : modifier.dexterityMode === "max-2"
+              ? Math.min(2, dexterity)
+              : 0;
+          derived.armorClass = Number(modifier.base) + dexterityBonus;
+          continue;
+        }
         derived[modifier.stat] = modifier.operation === "set"
           ? Number(modifier.value)
           : derived[modifier.stat] + Number(modifier.value);

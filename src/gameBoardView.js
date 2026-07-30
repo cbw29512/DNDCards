@@ -1,4 +1,4 @@
-import { allCards, characters, rooms } from "./data.js?v=unified-board-1";
+import { allCards, characters, rooms } from "./data.js?v=character-art-1";
 import { findAdventure } from "./adventures.js";
 import { cardView, emptyView } from "./cardView.js?v=unified-board-1";
 import { deriveCharacter } from "./characterEngine.js";
@@ -18,6 +18,11 @@ const SLOTS = [
   ["mainHand","Main hand"], ["offHand","Off hand"], ["hands","Hands"],
   ["waist","Waist"], ["feet","Feet"], ["ring1","Ring I"], ["ring2","Ring II"]
 ];
+const heroOptions = selectedId => characters.map(character =>
+  `<option value="${character.id}" ${character.id === selectedId ? "selected" : ""}>
+    ${character.title} · ${character.badge || "Adventure hero"}
+  </option>`
+).join("");
 
 const lane = (state, kind, title, icon, isDm) => {
   const ids = state.placedByRoom[state.roomId] || [];
@@ -62,8 +67,9 @@ const playerRail = state => {
   if (!player?.characterId) return `<aside class="character-sheet character-picker">
     <header><small>PRE-GENERATED HEROES</small><h2>Choose a hero</h2>
       <p>${state.identity?.role === "dm" ? "Select a character to inspect the complete player screen." : "Claim an available hero from the party panel."}</p></header>
-    ${state.identity?.role === "dm" ? characters.map(character => `<button data-action="preview-character" data-id="${character.id}">
-      <b>${character.title}</b><span>${character.playerText}</span></button>`).join("") : ""}</aside>`;
+    ${state.identity?.role === "dm" ? `<label class="hero-select">Character card
+      <select data-action="preview-character-select"><option value="">Choose from ${characters.length} cards…</option>
+        ${heroOptions(null)}</select></label>` : ""}</aside>`;
   const character = characters.find(card => card.id === player.characterId);
   const equipment = player.id === "dm-preview" ? {} : state.equipmentByPlayer[player.id] || {};
   const equipped = Object.values(equipment).map(id => allCards.find(card => card.id === id)).filter(Boolean);
@@ -73,8 +79,8 @@ const playerRail = state => {
     (state.pendingItemsByPlayer[player.id] || []).map(id => allCards.find(card => card.id === id)).filter(Boolean);
   return `<aside class="character-sheet">
     <header><small>YOUR CHARACTER</small><h2>${player.name}</h2></header>
-    ${state.identity?.role === "dm" ? `<nav class="hero-switcher" aria-label="Preview another pre-generated hero">
-      ${characters.map(hero => `<button data-action="preview-character" data-id="${hero.id}" class="${player.id === "dm-preview" && hero.id === character.id ? "active" : ""}">${hero.title.split(" ")[0]}</button>`).join("")}</nav>` : ""}
+    ${state.identity?.role === "dm" ? `<label class="hero-select">Preview another character card
+      <select data-action="preview-character-select">${heroOptions(character.id)}</select></label>` : ""}
     ${cardView(character, {
       face:"front", interactive:true,
       spellSlot:state.spellSlotByCard?.[character.id]
@@ -125,6 +131,9 @@ export const gameBoardView = state => {
       ${playerRail(state)}
     </div>
     ${isDm ? `<dialog id="library" class="card-vault"><header><div><small>DM CARD VAULT</small><h2>Choose a card</h2></div>
-      <button data-action="close-library">Close</button></header><div id="library-cards" class="card-row"></div></dialog>` : ""}
+      <button data-action="close-library">Close</button></header>
+      <label class="vault-search">⌕ <input id="board-library-search" type="search"
+        placeholder="Search this card drawer…"></label>
+      <div id="library-cards" class="card-row"></div></dialog>` : ""}
   </main>`;
 };

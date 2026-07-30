@@ -1,3 +1,6 @@
+import { importedCatalog } from "./importedCatalog.js?v=character-art-1";
+import { wildShapeCatalog } from "./wildShapeCatalog.js";
+
 export const rooms = [
   { id: "square", number: 1, title: "Hearthglow Square" },
   { id: "inn", number: 2, title: "The Heartbreak Inn" },
@@ -61,7 +64,7 @@ export const cards = [
     "Offer the charm clue if the party missed it.")
 ];
 
-export const characters = [
+const baseCharacters = [
   card("pc-wendy", "character", "Wendy the Wishkeeper", null,
     "A warm-hearted hero who protects every shared wish.", "", ["♥ 32", "🛡 15", "Initiative +3"], {
       initiative:3, proficiencyBonus:2, speed:30, baseArmorClass:15, abilities:[10,16,14,12,14,16],
@@ -97,4 +100,13 @@ export const events = Array.from({ length: 10 }, (_, index) =>
   ][index], "inn", "A birthday mystery unfolds in the inn.",
   `Event ${index + 1}: offer a cozy clue or gentle complication.`));
 
-export const allCards = [...cards, ...characters, ...events];
+const importedCharacters = importedCatalog.filter(card => card.kind === "character");
+export const characters = [...baseCharacters, ...importedCharacters];
+
+export const allCards = [
+  ...cards,
+  ...characters,
+  ...events,
+  ...wildShapeCatalog,
+  ...importedCatalog.filter(card => card.kind !== "character")
+];

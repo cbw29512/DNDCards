@@ -24,6 +24,13 @@ export const landingView = error => `
         <article><small>TREASURE CARD</small><b>Wishkeeper Charm</b><span>Claim the reward</span></article>
       </div>
     </section>
+    <section class="collection-metrics" aria-label="Dungeon Cards library highlights">
+      <span><b>1,400+</b><small>PLAYABLE CARDS</small></span>
+      <span><b>323</b><small>PRE-GEN HERO LEVELS</small></span>
+      <span><b>650+</b><small>CREATURES &amp; NPCS</small></span>
+      <span><b>161</b><small>EQUIPMENT CARDS</small></span>
+      <span><b>30</b><small>CONDITION CARDS</small></span>
+    </section>
     <section class="symbol-key-feature" id="symbol-key">
       <div class="symbol-key-card-stage"><span>PACK CARD 01</span>${symbolCardView("symbol-card--landing")}</div>
       <div class="symbol-key-copy">
@@ -68,7 +75,7 @@ export const landingView = error => `
       <p>When Dungeon Cards is used digitally, the actions on every active character and monster card become part of one shared combat system.</p></header>
       <div class="combat-flow">
         <article><span>1</span><h3>One-button initiative</h3><p>Players and the DM press Initiative. The system rolls from each active card, adds its bonus, groups identical monsters, applies tie breakers, and places everyone in order.</p></article>
-        <article><span>2</span><h3>Guided turns</h3><p>The active creature is highlighted. Movement, action, bonus action, free interaction, and reaction are tracked from the card before play advances to the next turn.</p></article>
+        <article><span>2</span><h3>Guided turns</h3><p>The active creature is highlighted. Movement, action, bonus action, free interaction, reaction, and a held Ready action are tracked before play advances.</p></article>
         <article><span>3</span><h3>Roll from the card</h3><p>Click a sword, bow, spell, save, skill, or damage icon. The card supplies its bonus, range, damage, difficulty, and effect. Printed-card groups simply roll real dice.</p></article>
         <article><span>4</span><h3>Conditions and resources</h3><p>Health, armor, spell uses, limited abilities, treasure effects, conditions, and concentration stay attached to the creature or character that owns them.</p></article>
         <article><span>5</span><h3>Rounds and rests</h3><p>The round tracker advances automatically. The DM can issue short or long rests so the correct card abilities reset together.</p></article>

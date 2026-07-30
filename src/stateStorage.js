@@ -1,4 +1,4 @@
-import { allCards, cards, rooms } from "./data.js";
+import { allCards, cards, rooms } from "./data.js?v=character-art-1";
 import { createState } from "./schema.js";
 
 const STORAGE_KEY = "dungeon-cards-standalone-v1";
@@ -33,7 +33,8 @@ export const loadState = () => {
     }
     state.healthByCard ||= {};
     for (const card of allCards) {
-      const maximum = Number(card.stats?.find(stat => stat.startsWith("♥"))?.match(/\d+/)?.[0]);
+      const statistics = card.stats || card.quickStats || [];
+      const maximum = Number(statistics.find(stat => stat.startsWith("♥"))?.match(/\d+/)?.[0]);
       if (maximum && !state.healthByCard[card.id]) state.healthByCard[card.id] = { current:maximum, maximum };
     }
     return state;

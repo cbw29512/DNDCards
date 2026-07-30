@@ -1,4 +1,4 @@
-import { allCards, rooms } from "./data.js?v=npc-lane-1";
+import { allCards, rooms } from "./data.js?v=character-art-1";
 import { SLOT_KINDS } from "./schema.js";
 import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 import { adventures, findAdventure } from "./adventures.js";
@@ -48,6 +48,8 @@ export const dmView = state => {
     </main>
     <dialog id="library" class="card-vault"><header><div><small>DM CARD VAULT</small><h2>Choose a card</h2></div>
       <button data-action="close-library">Close</button></header>
+      <label class="vault-search">⌕ <input id="board-library-search" type="search"
+        placeholder="Search this card drawer…"></label>
       <div id="library-cards" class="card-row"></div></dialog>
   </div>`;
 };
@@ -84,6 +86,22 @@ const eventView = state => {
     ${event ? cardView(event, { dm: true, flip:true, face:(state.dmFrontCardIds || []).includes(event.id) ? "front" : "back", action: "reveal", label: state.revealedIds.includes(event.id) ? "Hide from players" : "Reveal event" }) : ""}</section>`;
 };
 
-export const libraryCards = (state, kind) => allCards
-  .filter(card => card.kind === kind)
-  .map(card => cardView(card, { flip:true, face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back", action: "place", label: "Add to room" })).join("");
+export const libraryCards = (state, kind, query = "") => {
+  const terms = String(query).toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const matches = allCards.filter(card => {
+    if (card.kind !== kind) return false;
+    const text = [
+      card.title, card.id, card.badge, card.edition, card.subtype,
+      card.equipmentType, card.playerText
+    ].join(" ").toLowerCase();
+    return terms.every(term => text.includes(term));
+  });
+  return `<div class="vault-results"><b>${matches.length} ${kind} card${matches.length === 1 ? "" : "s"}</b>
+    ${matches.length > 80 ? "<span>Showing 80. Refine your search to see the rest.</span>" : ""}</div>
+    ${matches.slice(0, 80).map(card => cardView(card, {
+      flip:true,
+      face:(state.dmFrontCardIds || []).includes(card.id) ? "front" : "back",
+      action:"place",
+      label:"Add to room"
+    })).join("")}`;
+};

@@ -1,5 +1,5 @@
-import { allCards } from "./data.js";
-import { libraryCards } from "./dmView.js?v=npc-lane-1";
+import { allCards } from "./data.js?v=character-art-1";
+import { libraryCards } from "./dmView.js?v=character-art-1";
 import {
   rollInitiative,
   finishTurn,
@@ -7,17 +7,18 @@ import {
   triggerReadyAction
 } from "./initiative.js?v=ready-action-1";
 import { landingView } from "./landingView.js";
-import { libraryView } from "./libraryView.js?v=catalog-expand-1";
-import { loadState, saveState, updateState, findCard } from "./state.js?v=unified-board-2";
+import { libraryView } from "./libraryView.js?v=character-art-1";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=character-art-1";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js?v=catalog-expand-1";
+import { library } from "./libraryModel.js?v=character-art-1";
 import { spellActionAtLevel } from "./spellUpcast.js";
-import { tableView } from "./tableView.js?v=unified-board-3";
+import { tableView } from "./tableView.js?v=character-art-1";
 import { handleGameBoardButton } from "./gameBoardController.js";
 
 let state = loadState();
 let libraryKind = null;
+let boardLibraryQuery = "";
 let catalogKind = "all";
 let catalogQuery = "";
 const root = document.querySelector("#app");
@@ -49,7 +50,9 @@ const openLibrary = kind => {
   libraryKind = kind;
   const dialog = document.querySelector("#library");
   if (!dialog) return;
-  dialog.querySelector("#library-cards").innerHTML = libraryCards(state, kind);
+  dialog.querySelector("#library-cards").innerHTML = libraryCards(state, kind, boardLibraryQuery);
+  const search = dialog.querySelector("#board-library-search");
+  if (search) search.value = boardLibraryQuery;
   if (!dialog.open) dialog.showModal();
 };
 
@@ -95,7 +98,10 @@ root.addEventListener("click", event => {
       return dialog.showModal();
     }
     if (action === "close-login") return button.closest("dialog").close();
-    if (action === "open-library") return openLibrary(id);
+    if (action === "open-library") {
+      boardLibraryQuery = "";
+      return openLibrary(id);
+    }
     if (action === "close-library") {
       libraryKind = null;
       return button.closest("dialog").close();
@@ -158,6 +164,23 @@ root.addEventListener("submit", event => {
 
 root.addEventListener("input", event => {
   try {
+    if (event.target.id === "board-library-search") {
+      boardLibraryQuery = event.target.value;
+      openLibrary(libraryKind);
+      const search = document.querySelector("#board-library-search");
+      search?.focus();
+      search?.setSelectionRange(boardLibraryQuery.length, boardLibraryQuery.length);
+      return;
+    }
+    if (event.target.id === "character-search") {
+      const query = event.target.value;
+      state = updateState(state, { type:"set-character-query", value:query });
+      render();
+      const search = document.querySelector("#character-search");
+      search?.focus();
+      search?.setSelectionRange(query.length, query.length);
+      return;
+    }
     if (event.target.id !== "card-search") return;
     catalogQuery = event.target.value;
     render();
@@ -171,6 +194,11 @@ root.addEventListener("input", event => {
 
 root.addEventListener("change", event => {
   try {
+    const heroPicker = event.target.closest("[data-action='preview-character-select']");
+    if (heroPicker) {
+      if (heroPicker.value) dispatch({ type:"preview-character", id:heroPicker.value });
+      return;
+    }
     const picker = event.target.closest("[data-action='select-spell-slot']");
     if (!picker) return;
     dispatch({

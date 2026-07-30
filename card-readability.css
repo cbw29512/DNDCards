@@ -29,6 +29,77 @@
   -webkit-line-clamp: 3;
 }
 
+.library-card--has-art {
+  position: relative;
+  background-position: center;
+  background-size: cover;
+}
+
+.library-card--has-art:after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  box-shadow: inset 0 0 0 2px #e3bd5b, inset 0 -72px 60px #140b17d9;
+  pointer-events: none;
+}
+
+.library-card--has-art .library-card__band,
+.library-card--has-art .library-card__body {
+  position: relative;
+  z-index: 1;
+}
+
+.library-card--has-art .library-card__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #fff;
+  background: transparent;
+}
+
+.library-card--has-art .library-card__body > small {
+  color: #f4d77f;
+  font-weight: 900;
+  text-shadow: 0 1px 3px #000;
+}
+
+.library-card--has-art .library-card__body > p {
+  margin-bottom: 3.55rem;
+  padding: .5rem;
+  color: #fff;
+  background: #211326f2;
+  border: 1px solid #e3bd5b;
+  border-radius: .4rem;
+  text-shadow: 0 1px 2px #000;
+}
+
+.library-card--has-art .library-card__body > ul {
+  position: absolute;
+  right: .8rem;
+  bottom: 2.1rem;
+  left: .8rem;
+  margin: 0;
+}
+
+.library-card--has-art .library-card__body > ul li {
+  color: #201326;
+  background: #f3d979;
+  border: 1px solid #fff0b9;
+  font-weight: 900;
+}
+
+.library-card--has-art .library-card__body > footer {
+  color: #fff;
+  background: #211326f2;
+}
+
+.library-card,
+.card {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
 .library-card--monster .wild-actions button,
 .library-card--npc .wild-actions button {
   min-height: 34px;
@@ -55,5 +126,10 @@
 @media print {
   .catalog-limit {
     display: none;
+  }
+
+  .library-card--has-art {
+    background-position: center;
+    background-size: cover;
   }
 }

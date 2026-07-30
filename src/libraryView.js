@@ -1,22 +1,25 @@
-import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=catalog-expand-1";
+import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=character-art-1";
 import { symbolCardView } from "./symbolCardView.js";
 import { spellActionAtLevel, spellSlotOptions } from "./spellUpcast.js";
 
 const labels = {
   all: "All cards", room: "Rooms", npc: "NPCs", monster: "Monsters",
   trap: "Traps", treasure: "Treasure", clue: "Clues", event: "Events",
+  equipment: "Equipment", condition: "Conditions",
   character: "Pre-gen heroes", weapon: "Weapons & rolls", spell: "Spells",
   reference: "Reference", "wild-shape": "Wild Shapes"
 };
 
 const icons = {
   room: "⌂", npc: "♟", monster: "☠", trap: "⚠", treasure: "◆",
+  equipment: "◆", condition: "◈",
   clue: "⌕", event: "✦", character: "♞", weapon: "⚔", spell: "✦",
   reference: "?", "wild-shape": "🐾"
 };
 const slotNames = {
   room:"Location slot", npc:"NPC slot", monster:"Monster slot", trap:"Trap slot",
   treasure:"Treasure slot", clue:"Clue slot", event:"Event slot",
+  equipment:"Treasure slot", condition:"Reference card",
   character:"Character slot", weapon:"Action card", spell:"Spell card",
   "wild-shape":"Wild Shape slot"
 };
@@ -39,6 +42,10 @@ const spellSlotControl = (card, selectedLevel) => {
 const libraryCard = (card, backIds, spellSlotByCard) => {
   if (card.id === "REF-001") return symbolCardView("symbol-card--library");
   const isBack = backIds.includes(card.id);
+  const hasArt = !isBack && Boolean(card.art);
+  const artStyle = hasArt
+    ? `style="background-image:linear-gradient(180deg,transparent 38%,#140b17f2 82%),url('${escapeAttribute(card.art)}')"`
+    : "";
   const abilityNames = ["STR","DEX","CON","INT","WIS","CHA"];
   const abilityRow = card.abilities?.length === 6
     ? `<div class="wild-abilities">${card.abilities.map((score, index) =>
@@ -52,7 +59,8 @@ const libraryCard = (card, backIds, spellSlotByCard) => {
         <b>${action.icon} ${action.label}</b><small>${action.roll}${action.damage ? ` · ${action.damage}` : ""}</small>
       </button>`;
     }).join("")}</div>` : "";
-  return `<article class="library-card library-card--${card.kind} library-card--${isBack ? "back" : "front"}"
+  return `<article class="library-card library-card--${card.kind} library-card--${isBack ? "back" : "front"} ${hasArt ? "library-card--has-art" : ""}"
+    ${artStyle}
     data-action="flip-library-card" data-id="${card.id}" role="button" tabindex="0"
     aria-label="Flip ${escapeAttribute(card.title)} to its ${isBack ? "player front" : "DM back"}">
     <div class="library-card__band">
@@ -73,7 +81,10 @@ export const libraryView = (query = "", kind = "all", state = {}) => {
   const visibleMatches = matches.slice(0, 120);
   const backIds = state.libraryBackIds || [];
   const countFor = target => target === "all"
-    ? library.cards.length : library.cards.filter(card => card.kind === target).length;
+    ? library.cards.length
+    : target === "equipment" || target === "condition"
+      ? library.cards.filter(card => card.subtype === target).length
+      : library.cards.filter(card => card.kind === target).length;
   return `<main class="catalog-page">
     <header class="catalog-topbar"><a class="brand" href="#"><span>DC</span><div><b>DUNGEON CARDS</b><small>OFFICIAL CARD LIBRARY</small></div></a>
       <button data-action="close-card-library">← Back to home</button></header>
@@ -98,7 +109,7 @@ export const libraryView = (query = "", kind = "all", state = {}) => {
         licensed under CC BY 4.0. Wild Shape eligibility shown here is configured for a level-6
         Legacy Circle of the Moon Druid: CR 2 or lower, swimming allowed, flying forms locked,
         and the form must be one the character has seen.</footer>` : ""}
-      ${["character","weapon","spell","reference","monster","trap","treasure"].includes(kind)
+      ${["character","weapon","spell","reference","monster","trap","treasure","equipment","condition"].includes(kind)
         ? `<footer class="catalog-license">Imported cards identify their 2014 SRD 5.1,
           2024 SRD 5.2.1, or homebrew source. SRD material is used under CC BY 4.0.
           Edition labels remain visible so rules from different editions are not mixed accidentally.</footer>`

@@ -42,4 +42,32 @@ export const productDemoView = () => `
         <div class="symbol-showcase-wrap"><strong>INCLUDED IN EVERY ADVENTURE PACK</strong>${symbolCardView("symbol-card--showcase")}</div>
       </div>
     </div>
+    <div class="hero-card-showcase">
+      <div class="hero-card-copy"><small>YOUR HERO IS THE CARD</small>
+        <h2>Meet Mara Ironjaw.</h2>
+        <p>A pre-generated character should feel like opening a favorite hero—not filling out paperwork. Mara's illustrated front is made to show off. Her playable back puts the numbers and actions needed at the table within one glance.</p>
+        <ul><li><b>Claim and play:</b> choose a level-ready hero and join the table.</li>
+        <li><b>Equip the card:</b> armor, weapons, and magic items change live statistics.</li>
+        <li><b>Roll from the card:</b> attacks include equipped bonuses and separate damage types.</li>
+        <li><b>Take her anywhere:</b> the same hero can be digital, print-at-home, or QR-linked to a physical deck.</li></ul>
+      </div>
+      <div class="hero-card-pair" aria-label="Mara Ironjaw pre-generated character card front and playable back">
+        <article class="showcase-card hero-card-front">
+          <img src="assets/heroes/mara-ironjaw.webp" alt="Mara Ironjaw, a battle-ready half-orc barbarian holding a greataxe">
+          <header><span>♞</span><div><small>PLAYABLE HERO · LEVEL 3</small><b>MARA IRONJAW</b></div></header>
+          <footer><small>HALF-ORC BARBARIAN · BERSERKER</small>
+            <div><b>♥ 32</b><b>🛡 13</b><b>D20 +1 INIT</b></div>
+          </footer>
+        </article>
+        <article class="showcase-card hero-card-back">
+          <header><span>LEVEL 3</span><h3>MARA IRONJAW</h3><small>READY-TO-PLAY HERO CARD</small></header>
+          <div class="icon-stats"><b>🛡 13<small>ARMOR</small></b><b>♥ 32<small>HEALTH</small></b><b>➜ 30 ft.<small>SPEED</small></b></div>
+          <div class="abilities"><span>STR<b>17 +3</b></span><span>DEX<b>13 +1</b></span><span>CON<b>15 +2</b></span><span>INT<b>8 −1</b></span><span>WIS<b>12 +1</b></span><span>CHA<b>10 +0</b></span></div>
+          <section><h4>⚔ GREATAXE</h4><p><b>+5</b> to hit · reach 5 ft. · <b>1d12 + 3</b> slashing.</p></section>
+          <section><h4>⚔ GREATAXE · RAGING</h4><p><b>+5</b> to hit · reach 5 ft. · <b>1d12 + 5</b> slashing.</p></section>
+          <section><h4>➶ HANDAXE</h4><p><b>+5</b> to hit · range 20/60 ft. · <b>1d6 + 3</b> slashing.</p></section>
+          <footer><b>RAGE · 3 / LONG REST</b><span>Damage +2 · resist bludgeoning, piercing, and slashing</span></footer>
+        </article>
+      </div>
+    </div>
   </section>`;
