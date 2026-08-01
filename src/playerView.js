@@ -1,4 +1,4 @@
-import { allCards, characters } from "./data.js?v=hero-roster-1";
+import { allCards, characters } from "./data.js?v=level-3-pregens-1";
 import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 
 const zone = (title, icon, cards, empty, state) => `<section class="zone"><header><span>${icon}</span><h2>${title}</h2>
@@ -14,7 +14,7 @@ export const playerView = state => {
   return `<div class="player-layout rpg-workspace">
     <aside class="character hero-rail"><header><small>PLAYER CHARACTER</small><h2>${player.name}</h2></header>
       ${cardView(character, { health: state.healthByCard[character.id] })}
-      <div class="hero-shortcuts"><button>◈ Abilities</button><button>✦ Spells</button><button>◆ Backpack</button></div>
+      <div class="hero-shortcuts"><button data-action="open-pregen-pack" data-id="${character.id}">◈ Full hero pack</button><button data-action="open-pregen-pack" data-id="${character.id}">✦ Spells</button><button>◆ Backpack</button></div>
     </aside>
     <main class="combat player-stage">
       <header class="scene-heading"><div><small>PLAYER COMBAT VIEW</small>

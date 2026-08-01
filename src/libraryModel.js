@@ -1,4 +1,4 @@
-import { rawLibraryCatalog } from "./libraryCatalog.js?v=hero-roster-1";
+import { rawLibraryCatalog } from "./libraryCatalog.js?v=level-3-pregens-1";
 
 export const LIBRARY_KINDS = [
   "all", "room", "npc", "monster", "wild-shape", "trap", "treasure",

@@ -24,7 +24,15 @@ try {
     ["Seraphina Valebright", "seraphina-valebright"],
     ["Eirwen Greenarrow", "eirwen-greenarrow"],
     ["Mira Quickstep", "mira-quickstep"],
-    ["Aelar Ashquill", "aelar-ashquill"]
+    ["Aelar Ashquill", "aelar-ashquill"],
+    ["Torra Ashfang", "torra-ashfang"],
+    ["Mara Brightquill", "mara-brightquill"],
+    ["Thora Brightmantle", "thora-brightmantle"],
+    ["Rowan Ironmark", "rowan-ironmark"],
+    ["Cassian Brightward", "cassian-brightward"],
+    ["Arden Wildmark", "arden-wildmark"],
+    ["Tamsin Lockmere", "tamsin-lockmere"],
+    ["Nora Brightscript", "nora-brightscript"]
   ]);
   for (const [name, fileStem] of illustratedHeroes) {
     const heroCards = characters.filter(card => card.title.startsWith(`${name} · Level `));

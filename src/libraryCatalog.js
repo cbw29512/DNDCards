@@ -1,5 +1,6 @@
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
-import { importedCatalog } from "./importedCatalog.js?v=hero-roster-1";
+import { importedCatalog } from "./importedCatalog.js?v=level-3-pregens-1";
+import { enhancePregen } from "./pregenCollection.js?v=level-3-pregens-1";
 
 const c = (id, kind, title, roomNumber, badge, playerText, dmText = "", quickStats = []) => ({
   id, kind, title, roomNumber, badge, playerText, dmText, quickStats,
@@ -47,5 +48,5 @@ export const rawLibraryCatalog = [
     ["10","The Truth Bell Cracks","The truth bell cracks and releases a wave of silver light.","Everyone may reroll one failed social or investigation check made in the inn."]
   ].map(([number,title,playerText,dmText]) => c(`EVENT-${number}`,"event",title,2,`Inn event ${Number(number)}`,playerText,dmText)),
   ...wildShapeCatalog,
-  ...importedCatalog
+  ...importedCatalog.map(card => card.kind === "character" ? enhancePregen(card) : card)
 ];

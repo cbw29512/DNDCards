@@ -1,6 +1,6 @@
-import { productDemoView } from "./productDemoView.js?v=hero-roster-1";
+import { productDemoView } from "./productDemoView.js?v=level-3-pregens-1";
 import { symbolCardView } from "./symbolCardView.js";
-import { heroRosterView } from "./heroRosterView.js?v=hero-roster-1";
+import { heroRosterView } from "./heroRosterView.js?v=level-3-pregens-1";
 
 export const landingView = error => `
   <main class="landing">

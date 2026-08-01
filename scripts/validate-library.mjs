@@ -15,14 +15,14 @@ try {
     throw new Error(`Expected 1,340 imported cards; found ${importedCatalog.length}.`);
   }
   for (const card of importedCatalog) {
-    for (const action of card.actions || []) {
+    for (const action of [...(card.actions || []), ...(card.spellActions || [])]) {
       if (!symbolKey.has(action.icon)) {
         throw new Error(`${card.id} uses action icon "${action.icon}" outside the Symbol Key.`);
       }
     }
   }
   for (const card of importedCatalog) {
-    for (const action of card.actions || []) {
+    for (const action of [...(card.actions || []), ...(card.spellActions || [])]) {
       if (action.roll) parseFormula(action.roll);
       if (action.damage) parseFormula(action.damage);
     }

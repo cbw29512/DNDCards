@@ -1,7 +1,7 @@
-import { allCards, characters, rooms } from "./data.js?v=hero-roster-1";
+import { allCards, characters, rooms } from "./data.js?v=level-3-pregens-1";
 import { findAdventure } from "./adventures.js";
 import { cardView, emptyView } from "./cardView.js?v=unified-board-1";
-import { deriveCharacter } from "./characterEngine.js?v=hero-roster-1";
+import { deriveCharacter } from "./characterEngine.js?v=level-3-pregens-1";
 import { diceTrayView } from "./diceTrayView.js";
 
 const LANES = [

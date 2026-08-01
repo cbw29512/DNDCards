@@ -1,4 +1,4 @@
-import { characters } from "./data.js?v=hero-roster-1";
+import { characters } from "./data.js?v=level-3-pregens-1";
 import { cardView } from "./cardView.js?v=npc-lane-1";
 
 const escapeAttribute = value => String(value || "").replace(/[&<>"']/g, char =>
@@ -15,7 +15,15 @@ export const lobbyView = state => {
       card.playerText
     ].join(" ").toLowerCase();
     return terms.every(term => text.includes(term));
-  });
+  }).sort((left, right) =>
+    Number(right.level === 3) - Number(left.level === 3)
+    || String(left.classId || "").localeCompare(String(right.classId || ""))
+    || String(left.edition || "").localeCompare(String(right.edition || ""))
+  );
+  const claimCard = card => `<div class="claim-card">
+    ${cardView(card, { action: "claim", label: "Claim character" })}
+    ${card.level === 3 ? `<button class="pregen-pack-trigger" data-action="open-pregen-pack" data-id="${card.id}">View complete hero pack</button>` : ""}
+  </div>`;
   return `
     <section class="lobby party-panel">
       <header><div><small>TABLE CODE</small><strong>${state.sessionCode}</strong></div>
@@ -29,11 +37,11 @@ export const lobbyView = state => {
           <b>${player.name}</b><span>${characters.find(card => card.id === player.characterId)?.title || "Choosing character"}</span>
         </button>`).join("")}</div>
       ${state.mode === "player" && active && !active.characterId ? `
-        <div class="claim"><h2>Claim an available character</h2>
+        <div class="claim"><h2>Claim a ready-to-play hero</h2>
+        <div class="pregen-filters"><button data-action="set-character-query" data-id="level 3">Level 3 starters</button><button data-action="set-character-query" data-id="level 3 2014">2014 heroes</button><button data-action="set-character-query" data-id="level 3 2024">2024 heroes</button><button data-action="set-character-query" data-id="">All levels</button></div>
         <label class="character-search">⌕ <input id="character-search" type="search"
           value="${escapeAttribute(state.characterQuery)}" placeholder="Search class, level, edition, or hero…"></label>
         <p>${available.length} available character cards${available.length > 40 ? " · showing first 40" : ""}</p>
-        <div class="card-row">${available.slice(0, 40)
-          .map(card => cardView(card, { action: "claim", label: "Claim character" })).join("")}</div></div>` : "" }
+        <div class="card-row">${available.slice(0, 40).map(claimCard).join("")}</div></div>` : "" }
     </section>`;
 };

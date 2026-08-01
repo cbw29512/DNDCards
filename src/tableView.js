@@ -1,13 +1,13 @@
-import { dmView } from "./dmView.js?v=hero-roster-1";
+import { dmView } from "./dmView.js?v=level-3-pregens-1";
 import { initiativeView } from "./initiativeView.js";
-import { lobbyView } from "./lobbyView.js?v=hero-roster-1";
-import { playerView } from "./playerView.js?v=hero-roster-1";
+import { lobbyView } from "./lobbyView.js?v=level-3-pregens-1";
+import { playerView } from "./playerView.js?v=level-3-pregens-1";
 import { printView } from "./printView.js?v=npc-lane-1";
 import { rollResultView } from "./rollResultView.js";
 import { symbolCardView } from "./symbolCardView.js";
 import { tableHeaderView } from "./tableHeaderView.js?v=unified-board-2";
 import { findAdventure } from "./adventures.js";
-import { gameBoardView } from "./gameBoardView.js?v=hero-roster-1";
+import { gameBoardView } from "./gameBoardView.js?v=level-3-pregens-1";
 
 export const tableView = state => {
   const adventure = findAdventure(state.adventureId);
@@ -23,6 +23,7 @@ export const tableView = state => {
     <button data-action="close-symbols" class="dialog-close" aria-label="Close">×</button>
     ${symbolCardView()}
   </dialog>
+  <dialog id="pregen-pack-dialog" class="pregen-pack-dialog"></dialog>
   ${rollResultView(state)}${printView(state)}
 </div>`;
 };

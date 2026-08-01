@@ -23,7 +23,7 @@ export const createState = () => ({
   tableTab: "adventure",
   boardPerspective: "dm",
   previewCharacterId: null,
-  characterQuery: "",
+  characterQuery: "level 3",
   adventureId: null,
   adventureComplete: false,
   completedRoomIds: [],

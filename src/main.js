@@ -1,26 +1,28 @@
-import { allCards } from "./data.js?v=hero-roster-1";
-import { libraryCards } from "./dmView.js?v=hero-roster-1";
+import { allCards } from "./data.js?v=level-3-pregens-1";
+import { libraryCards } from "./dmView.js?v=level-3-pregens-1";
 import {
   rollInitiative,
   finishTurn,
   readyAction,
   triggerReadyAction
-} from "./initiative.js?v=hero-roster-1";
-import { landingView } from "./landingView.js?v=hero-roster-1";
-import { libraryView } from "./libraryView.js?v=hero-roster-1";
-import { loadState, saveState, updateState, findCard } from "./state.js?v=hero-roster-1";
+} from "./initiative.js?v=level-3-pregens-1";
+import { landingView } from "./landingView.js?v=level-3-pregens-1";
+import { libraryView } from "./libraryView.js?v=level-3-pregens-1";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=level-3-pregens-1";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js?v=hero-roster-1";
+import { library } from "./libraryModel.js?v=level-3-pregens-1";
 import { spellActionAtLevel } from "./spellUpcast.js";
-import { tableView } from "./tableView.js?v=hero-roster-1";
-import { handleGameBoardButton } from "./gameBoardController.js?v=hero-roster-1";
+import { tableView } from "./tableView.js?v=level-3-pregens-1";
+import { handleGameBoardButton } from "./gameBoardController.js?v=level-3-pregens-1";
+import { pregenPackView } from "./pregenPackView.js?v=level-3-pregens-1";
 
 let state = loadState();
 let libraryKind = null;
 let boardLibraryQuery = "";
 let catalogKind = "all";
 let catalogQuery = "";
+let openPregenId = null;
 const root = document.querySelector("#app");
 
 const render = () => {
@@ -35,6 +37,7 @@ const render = () => {
     }
     root.innerHTML = tableView(state);
     if (libraryKind) openLibrary(libraryKind);
+    if (openPregenId) openPregenPack(openPregenId);
   } catch (error) {
     console.error("[Dungeon Cards] Interface render failed.", error);
     root.innerHTML = "<h1>Dungeon Cards could not load. Refresh to try again.</h1>";
@@ -56,6 +59,15 @@ const openLibrary = kind => {
   if (!dialog.open) dialog.showModal();
 };
 
+const openPregenPack = id => {
+  const card = findCard(id);
+  const dialog = document.querySelector("#pregen-pack-dialog");
+  if (!card || card.kind !== "character" || !dialog) return;
+  openPregenId = id;
+  dialog.innerHTML = pregenPackView(card, state);
+  if (!dialog.open) dialog.showModal();
+};
+
 root.addEventListener("click", event => {
   try {
     const button = event.target.closest("[data-action]");
@@ -66,8 +78,11 @@ root.addEventListener("click", event => {
       const card = findCard(button.dataset.cardId)
         || library.cards.find(candidate => candidate.id === button.dataset.cardId);
       if (!card) throw new Error(`Card ${button.dataset.cardId} was not found.`);
-      const result = executeCardAction(card, id, Math.random, {
-        slotLevel: state.spellSlotByCard?.[card.id],
+      const rollCard = card.spellActions?.some(action => action.id === id)
+        ? { ...card, actions: [...(card.actions || []), ...card.spellActions] }
+        : card;
+      const result = executeCardAction(rollCard, id, Math.random, {
+        slotLevel: state.spellSlotByCard?.[button.dataset.slotKey || card.id],
         transformAction: spellActionAtLevel
       });
       state.lastRoll = result;
@@ -87,6 +102,13 @@ root.addEventListener("click", event => {
     if (action === "filter-cards") { catalogKind = id; return render(); }
     if (action === "symbols") return document.querySelector("#symbol-dialog").showModal();
     if (action === "close-symbols") return button.closest("dialog").close();
+    if (action === "open-pregen-pack") return openPregenPack(id);
+    if (action === "close-pregen-pack") {
+      openPregenId = null; return button.closest("dialog").close();
+    }
+    if (action === "print-pregen-pack") {
+      document.body.dataset.print = "pregen-pack"; window.print(); return;
+    }
     if (action === "choose-login") {
       const dialog = document.querySelector("#login-dialog");
       const player = id === "player";

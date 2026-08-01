@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { heroRosterView } from "../src/heroRosterView.js";
-import { importedPregens } from "../src/importedPregens.js";
+import { characters } from "../src/data.js";
 
 try {
   const view = heroRosterView();
@@ -12,7 +12,15 @@ try {
     "Seraphina Valebright",
     "Eirwen Greenarrow",
     "Mira Quickstep",
-    "Aelar Ashquill"
+    "Aelar Ashquill",
+    "Torra Ashfang",
+    "Mara Brightquill",
+    "Thora Brightmantle",
+    "Rowan Ironmark",
+    "Cassian Brightward",
+    "Arden Wildmark",
+    "Tamsin Lockmere",
+    "Nora Brightscript"
   ];
 
   assert.equal((view.match(/<article>/g) || []).length, rosterNames.length);
@@ -25,7 +33,7 @@ try {
       `${name} should appear once in image alt text and once in its title.`
     );
     assert.equal(
-      importedPregens.filter(card =>
+      characters.filter(card =>
         card.title.startsWith(`${name} · Level `) && card.art
       ).length,
       20,

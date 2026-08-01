@@ -1,5 +1,6 @@
-import { importedCatalog } from "./importedCatalog.js?v=hero-roster-1";
+import { importedCatalog } from "./importedCatalog.js?v=level-3-pregens-1";
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
+import { enhancePregen } from "./pregenCollection.js?v=level-3-pregens-1";
 
 export const rooms = [
   { id: "square", number: 1, title: "Hearthglow Square" },
@@ -100,7 +101,9 @@ export const events = Array.from({ length: 10 }, (_, index) =>
   ][index], "inn", "A birthday mystery unfolds in the inn.",
   `Event ${index + 1}: offer a cozy clue or gentle complication.`));
 
-const importedCharacters = importedCatalog.filter(card => card.kind === "character");
+const importedCharacters = importedCatalog
+  .filter(card => card.kind === "character")
+  .map(enhancePregen);
 export const characters = [...baseCharacters, ...importedCharacters];
 
 export const allCards = [

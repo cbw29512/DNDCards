@@ -18,11 +18,11 @@ const RULES = {
   "OLD-RULE-hellish-rebuke": { baseLevel: 1, dicePerLevel: 1 }
 };
 
-export const getUpcastRule = card => RULES[card?.id] || null;
+export const getUpcastRule = (card, action) => action?.upcast || RULES[card?.id] || null;
 
-export const normalizeSpellSlot = (card, requestedLevel) => {
+export const normalizeSpellSlot = (card, requestedLevel, action) => {
   try {
-    const rule = getUpcastRule(card);
+    const rule = getUpcastRule(card, action);
     if (!rule) return null;
     const level = Number(requestedLevel);
     return Number.isInteger(level)
@@ -50,9 +50,9 @@ export const upcastFormula = (formula, rule, slotLevel) => {
 
 export const spellActionAtLevel = (card, action, requestedLevel) => {
   try {
-    const rule = getUpcastRule(card);
+    const rule = getUpcastRule(card, action);
     if (!rule) return action;
-    const slotLevel = normalizeSpellSlot(card, requestedLevel);
+    const slotLevel = normalizeSpellSlot(card, requestedLevel, action);
     return {
       ...action,
       roll: upcastFormula(action.roll, rule, slotLevel),

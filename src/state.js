@@ -1,7 +1,7 @@
-import { allCards, cards } from "./data.js?v=hero-roster-1";
+import { allCards, cards } from "./data.js?v=level-3-pregens-1";
 import { findAdventure } from "./adventures.js";
 import { updateEquipmentState } from "./equipmentState.js";
-import { loadState, saveState } from "./stateStorage.js?v=hero-roster-1";
+import { loadState, saveState } from "./stateStorage.js?v=level-3-pregens-1";
 import { updateGameBoardState } from "./gameBoardState.js?v=unified-board-2";
 
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
