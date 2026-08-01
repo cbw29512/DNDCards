@@ -1,4 +1,4 @@
-import { characters } from "./data.js?v=character-art-2";
+import { characters } from "./data.js?v=hero-roster-1";
 import { cardView } from "./cardView.js?v=npc-lane-1";
 
 const escapeAttribute = value => String(value || "").replace(/[&<>"']/g, char =>

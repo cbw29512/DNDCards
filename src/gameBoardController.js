@@ -1,7 +1,7 @@
-import { characters } from "./data.js?v=character-art-2";
-import { findCard } from "./state.js?v=character-art-2";
+import { characters } from "./data.js?v=hero-roster-1";
+import { findCard } from "./state.js?v=hero-roster-1";
 import { rollFormula } from "./diceEngine.js";
-import { executeEquippedAttack } from "./characterEngine.js?v=character-art-2";
+import { executeEquippedAttack } from "./characterEngine.js?v=hero-roster-1";
 
 export const handleGameBoardButton = (state, button) => {
   try {

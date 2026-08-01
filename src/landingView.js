@@ -1,5 +1,6 @@
-import { productDemoView } from "./productDemoView.js?v=character-art-2";
+import { productDemoView } from "./productDemoView.js?v=hero-roster-1";
 import { symbolCardView } from "./symbolCardView.js";
+import { heroRosterView } from "./heroRosterView.js?v=hero-roster-1";
 
 export const landingView = error => `
   <main class="landing">
@@ -42,6 +43,7 @@ export const landingView = error => `
       </div>
     </section>
     ${productDemoView()}
+    ${heroRosterView()}
     <section class="how" id="how-it-works">
       <small>ONE SYSTEM · EVERY ADVENTURE</small><h2>Draw the next piece of the story.</h2>
       <div><article><b>1</b><h3>Build</h3><p>The DM assembles rooms from reusable cards.</p></article>

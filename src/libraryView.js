@@ -1,4 +1,4 @@
-import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=character-art-2";
+import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=hero-roster-1";
 import { symbolCardView } from "./symbolCardView.js";
 import { spellActionAtLevel, spellSlotOptions } from "./spellUpcast.js";
 

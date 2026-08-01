@@ -1,5 +1,5 @@
-import { allCards, cards, rooms } from "./data.js?v=character-art-2";
-import { createState } from "./schema.js?v=character-art-2";
+import { allCards, cards, rooms } from "./data.js?v=hero-roster-1";
+import { createState } from "./schema.js?v=hero-roster-1";
 
 const STORAGE_KEY = "dungeon-cards-standalone-v1";
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);

@@ -16,6 +16,28 @@ try {
   assert.equal(maraCards.length, 20);
   assert.ok(maraCards.every(card => card.art === "assets/heroes/mara-ironjaw.webp"));
   assert.ok(existsSync(new URL("../assets/heroes/mara-ironjaw.webp", import.meta.url)));
+  const illustratedHeroes = new Map([
+    ["Mara Ironjaw", "mara-ironjaw"],
+    ["Lyra Silverstring", "lyra-silverstring"],
+    ["Bromli Dawnshield", "bromli-dawnshield"],
+    ["Kara Stoneguard", "kara-stoneguard"],
+    ["Seraphina Valebright", "seraphina-valebright"],
+    ["Eirwen Greenarrow", "eirwen-greenarrow"],
+    ["Mira Quickstep", "mira-quickstep"],
+    ["Aelar Ashquill", "aelar-ashquill"]
+  ]);
+  for (const [name, fileStem] of illustratedHeroes) {
+    const heroCards = characters.filter(card => card.title.startsWith(`${name} · Level `));
+    assert.equal(heroCards.length, 20, `${name} should have twenty level cards.`);
+    assert.ok(
+      heroCards.every(card => card.art === `assets/heroes/${fileStem}.webp`),
+      `${name} should use one consistent portrait across all levels.`
+    );
+    assert.ok(
+      existsSync(new URL(`../assets/heroes/${fileStem}.webp`, import.meta.url)),
+      `${name}'s optimized portrait should exist.`
+    );
+  }
 
   const plate = allCards.find(card =>
     card.id === "OLD-EQUIPMENT-srd-5.2.1-2024-plate"

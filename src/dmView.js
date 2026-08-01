@@ -1,5 +1,5 @@
-import { allCards, rooms } from "./data.js?v=character-art-2";
-import { SLOT_KINDS } from "./schema.js?v=character-art-2";
+import { allCards, rooms } from "./data.js?v=hero-roster-1";
+import { SLOT_KINDS } from "./schema.js?v=hero-roster-1";
 import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 import { adventures, findAdventure } from "./adventures.js";
 

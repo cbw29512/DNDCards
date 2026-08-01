@@ -1,5 +1,5 @@
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
-import { importedCatalog } from "./importedCatalog.js?v=character-art-2";
+import { importedCatalog } from "./importedCatalog.js?v=hero-roster-1";
 
 const c = (id, kind, title, roomNumber, badge, playerText, dmText = "", quickStats = []) => ({
   id, kind, title, roomNumber, badge, playerText, dmText, quickStats,
