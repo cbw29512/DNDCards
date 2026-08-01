@@ -5,38 +5,27 @@ import { deriveCharacter } from "../src/characterEngine.js";
 import { library } from "../src/libraryModel.js";
 import { libraryCards } from "../src/dmView.js";
 import { updateEquipmentState } from "../src/equipmentState.js";
+import { heroRoster } from "../src/heroRosterData.js";
 
 try {
   const equipment = library.cards.filter(card => card.subtype === "equipment");
   const conditions = library.cards.filter(card => card.subtype === "condition");
   assert.equal(equipment.length, 161);
   assert.equal(conditions.length, 30);
-  assert.equal(characters.length, 323);
+  assert.equal(characters.length, 331);
   const maraCards = characters.filter(card => card.title.startsWith("Mara Ironjaw · Level "));
   assert.equal(maraCards.length, 20);
   assert.ok(maraCards.every(card => card.art === "assets/heroes/mara-ironjaw.webp"));
   assert.ok(existsSync(new URL("../assets/heroes/mara-ironjaw.webp", import.meta.url)));
-  const illustratedHeroes = new Map([
-    ["Mara Ironjaw", "mara-ironjaw"],
-    ["Lyra Silverstring", "lyra-silverstring"],
-    ["Bromli Dawnshield", "bromli-dawnshield"],
-    ["Kara Stoneguard", "kara-stoneguard"],
-    ["Seraphina Valebright", "seraphina-valebright"],
-    ["Eirwen Greenarrow", "eirwen-greenarrow"],
-    ["Mira Quickstep", "mira-quickstep"],
-    ["Aelar Ashquill", "aelar-ashquill"],
-    ["Torra Ashfang", "torra-ashfang"],
-    ["Mara Brightquill", "mara-brightquill"],
-    ["Thora Brightmantle", "thora-brightmantle"],
-    ["Rowan Ironmark", "rowan-ironmark"],
-    ["Cassian Brightward", "cassian-brightward"],
-    ["Arden Wildmark", "arden-wildmark"],
-    ["Tamsin Lockmere", "tamsin-lockmere"],
-    ["Nora Brightscript", "nora-brightscript"]
+  const illustratedHeroes = new Map(heroRoster.map(hero => [hero.name, hero.stem]));
+  const starterOnly = new Set([
+    "Elowen Mossvale", "Sable Fernwhisper", "Kael Riverstep", "Juno Swiftwater",
+    "Veyra Emberborn", "Orryn Scaleheart", "Nyx Cinderveil", "Vale Nightglass"
   ]);
   for (const [name, fileStem] of illustratedHeroes) {
     const heroCards = characters.filter(card => card.title.startsWith(`${name} · Level `));
-    assert.equal(heroCards.length, 20, `${name} should have twenty level cards.`);
+    const expected = starterOnly.has(name) ? 1 : 20;
+    assert.equal(heroCards.length, expected, `${name} should have ${expected} release card(s).`);
     assert.ok(
       heroCards.every(card => card.art === `assets/heroes/${fileStem}.webp`),
       `${name} should use one consistent portrait across all levels.`

@@ -1,4 +1,4 @@
-import { allCards, characters } from "./data.js?v=level-3-pregens-1";
+import { allCards, characters } from "./data.js?v=all-core-classes-1";
 import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 
 const zone = (title, icon, cards, empty, state) => `<section class="zone"><header><span>${icon}</span><h2>${title}</h2>

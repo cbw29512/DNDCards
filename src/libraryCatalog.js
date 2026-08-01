@@ -1,6 +1,6 @@
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
-import { importedCatalog } from "./importedCatalog.js?v=level-3-pregens-1";
-import { enhancePregen } from "./pregenCollection.js?v=level-3-pregens-1";
+import { importedCatalog } from "./importedCatalog.js?v=all-core-classes-1";
+import { enhancePregen } from "./pregenCollection.js?v=all-core-classes-1";
 
 const c = (id, kind, title, roomNumber, badge, playerText, dmText = "", quickStats = []) => ({
   id, kind, title, roomNumber, badge, playerText, dmText, quickStats,

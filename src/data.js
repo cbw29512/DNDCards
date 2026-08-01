@@ -1,6 +1,6 @@
-import { importedCatalog } from "./importedCatalog.js?v=level-3-pregens-1";
+import { importedCatalog } from "./importedCatalog.js?v=all-core-classes-1";
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
-import { enhancePregen } from "./pregenCollection.js?v=level-3-pregens-1";
+import { enhancePregen } from "./pregenCollection.js?v=all-core-classes-1";
 
 export const rooms = [
   { id: "square", number: 1, title: "Hearthglow Square" },

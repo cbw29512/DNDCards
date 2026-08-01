@@ -7,9 +7,20 @@ import { executeCardAction } from "../src/diceEngine.js";
 import { spellActionAtLevel } from "../src/spellUpcast.js";
 
 const starters = levelThreePregens;
-assert.equal(starters.length, 16, "The starter roster must contain 16 level 3 heroes.");
-assert.equal(starters.filter(card => card.edition === "2014").length, 8);
-assert.equal(starters.filter(card => card.edition === "2024").length, 8);
+assert.equal(starters.length, 24, "The starter roster must contain 24 level 3 heroes.");
+assert.equal(starters.filter(card => card.edition === "2014").length, 12);
+assert.equal(starters.filter(card => card.edition === "2024").length, 12);
+const coreClasses = [
+  "barbarian", "bard", "cleric", "druid", "fighter", "monk",
+  "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard"
+];
+for (const edition of ["2014", "2024"]) {
+  assert.deepEqual(
+    starters.filter(card => card.edition === edition)
+      .map(card => card.classId).sort(),
+    coreClasses
+  );
+}
 
 for (const card of starters) {
   assert.equal(card.starterPack, true);
@@ -49,5 +60,13 @@ const upcast = executeCardAction(rollCard, missile.id, () => 0, {
 });
 assert.equal(upcast.roll.formula, "4d4+4");
 assert.equal(upcast.roll.total, 8);
+
+const vale = starters.find(card => card.title.startsWith("Vale Nightglass"));
+const blast = vale.spellActions.find(action => action.label === "Eldritch Blast");
+assert.equal(blast.damage, "1d10+3", "Agonizing Blast must add Charisma damage.");
+assert.match(blast.effect, /push/i, "Repelling Blast must be included in the action.");
+
+const juno = starters.find(card => card.title.startsWith("Juno Swiftwater"));
+assert.ok(pregenPackPages(juno).filter(page => page.type === "combat").length > 1);
 
 console.log("Level 3 pregen pack tests passed.");

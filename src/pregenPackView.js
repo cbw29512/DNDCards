@@ -1,6 +1,6 @@
 import {
   findSpellAction, maxSpellSlot, pregenPackPages, signed, spellSlotKey
-} from "./pregenPackModel.js?v=level-3-pregens-1";
+} from "./pregenPackModel.js?v=all-core-classes-1";
 
 const escape = value => String(value ?? "").replace(/[&<>"']/g, character =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" })[character]
@@ -17,8 +17,14 @@ const abilities = (card, page) => `<div class="pregen-body">${band(card, page)}
   <div class="pregen-abilities">${page.abilities.map(ability => `<div><b>${ability.id}</b><strong>${ability.score}</strong><span>${signed(ability.modifier)}</span><small>SAVE ${signed(ability.save)}${ability.proficient ? " ●" : ""}</small></div>`).join("")}</div>
   <section><h4>PROFICIENCY +${card.proficiencyBonus} · INITIATIVE ${signed(card.initiative)}</h4><p><b>Skills:</b> ${escape(card.skillProficiencies.join(", "))}</p><p><b>Senses:</b> ${escape(card.senses.join(", "))}</p><p><b>Languages:</b> ${escape(card.languages.join(", "))}</p><p><b>Tools:</b> ${escape(card.toolProficiencies.join(", ") || "None")}</p></section></div>`;
 
+const actionSummary = action => action.kind === "attack"
+  ? `TO HIT ${action.roll} · ${action.damage} · ${action.range}`
+  : action.save
+    ? `SAVE DC ${action.save.dc} ${action.save.ability} · ROLL ${action.roll || action.damage || "EFFECT"}`
+    : `ROLL ${action.roll || action.damage || "EFFECT"} · ${action.range || action.cost || "Feature"}`;
+
 const combat = (card, page) => `<div class="pregen-body">${band(card, page)}<div class="pregen-action-list">
-  ${page.attacks.map(action => `<button data-action="roll-card-action" data-card-id="${escape(card.id)}" data-id="${escape(action.id)}"><b>${escape(action.icon)} ${escape(action.label)}</b><span>TO HIT ${escape(action.roll)} · ${escape(action.damage)} · ${escape(action.range)}</span><small>${escape(action.effect || "Weapon attack")}</small></button>`).join("")}
+  ${page.attacks.map(action => `<button data-action="roll-card-action" data-card-id="${escape(card.id)}" data-id="${escape(action.id)}"><b>${escape(action.icon)} ${escape(action.label)}</b><span>${escape(actionSummary(action))}</span><small>${escape(action.effect || "Use this action as listed.")}</small></button>`).join("")}
   </div><footer>Click an action to roll the attack and damage together.</footer></div>`;
 
 const features = (card, page, state) => `<div class="pregen-body">${band(card, page)}
@@ -38,7 +44,11 @@ const spell = (card, detail, state) => {
   return `<section class="pregen-spell"><h4><span>${detail.level ? `L${detail.level}` : "CANTRIP"}</span>${escape(detail.name)}</h4><small>${escape(detail.castingTime)} · ${escape(detail.range)} · ${escape(detail.duration)}</small><p>${escape(summary(detail.description))}</p>${action ? `<div>${options}<button data-action="roll-card-action" data-card-id="${escape(card.id)}" data-id="${escape(action.id)}" data-slot-key="${escape(key)}">${action.save ? `DC ${action.save.dc}` : action.damage || action.roll || "USE"} · ROLL</button></div>` : ""}</section>`;
 };
 
-const spells = (card, page, state) => `<div class="pregen-body pregen-body--spells">${band(card, page)}<div>${page.spells.map(detail => spell(card, detail, state)).join("")}</div><footer>Spell attack ${signed(card.spellAttackBonus)} · Save DC ${card.spellSaveDc} · ${page.final ? "FINAL ACCORDION CARD" : "CONTINUE →"}</footer></div>`;
+const slotSummary = card => Object.entries(card.spellcasting?.slotsByLevel || {})
+  .sort(([left], [right]) => Number(left) - Number(right))
+  .map(([level, count]) => `L${level} ×${count}`).join(" · ");
+
+const spells = (card, page, state) => `<div class="pregen-body pregen-body--spells">${band(card, page)}<p class="pregen-slot-row"><b>SPELL SLOTS</b> ${escape(slotSummary(card) || "Cantrips / at-will")}</p><div>${page.spells.map(detail => spell(card, detail, state)).join("")}</div><footer>Spell attack ${signed(card.spellAttackBonus)} · Save DC ${card.spellSaveDc} · ${page.final ? "FINAL ACCORDION CARD" : "CONTINUE →"}</footer></div>`;
 
 const pageView = (card, page, state) => `<article class="pregen-card pregen-card--${page.type}">${({ portrait, abilities, combat, features, gear, spells })[page.type](card, page, state)}</article>`;
 

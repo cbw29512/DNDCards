@@ -1,27 +1,15 @@
 import assert from "node:assert/strict";
 import { heroRosterView } from "../src/heroRosterView.js";
 import { characters } from "../src/data.js";
+import { heroRoster } from "../src/heroRosterData.js";
 
 try {
   const view = heroRosterView();
-  const rosterNames = [
-    "Mara Ironjaw",
-    "Lyra Silverstring",
-    "Bromli Dawnshield",
-    "Kara Stoneguard",
-    "Seraphina Valebright",
-    "Eirwen Greenarrow",
-    "Mira Quickstep",
-    "Aelar Ashquill",
-    "Torra Ashfang",
-    "Mara Brightquill",
-    "Thora Brightmantle",
-    "Rowan Ironmark",
-    "Cassian Brightward",
-    "Arden Wildmark",
-    "Tamsin Lockmere",
-    "Nora Brightscript"
-  ];
+  const rosterNames = heroRoster.map(hero => hero.name);
+  const starterOnly = new Set([
+    "Elowen Mossvale", "Sable Fernwhisper", "Kael Riverstep", "Juno Swiftwater",
+    "Veyra Emberborn", "Orryn Scaleheart", "Nyx Cinderveil", "Vale Nightglass"
+  ]);
 
   assert.equal((view.match(/<article>/g) || []).length, rosterNames.length);
   assert.equal((view.match(/loading="lazy"/g) || []).length, rosterNames.length);
@@ -36,8 +24,8 @@ try {
       characters.filter(card =>
         card.title.startsWith(`${name} · Level `) && card.art
       ).length,
-      20,
-      `${name} should have illustrated cards for levels 1–20.`
+      starterOnly.has(name) ? 1 : 20,
+      `${name} should have the expected illustrated release cards.`
     );
   }
 

@@ -1,4 +1,4 @@
-import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=level-3-pregens-1";
+import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=all-core-classes-1";
 import { symbolCardView } from "./symbolCardView.js";
 import { spellActionAtLevel, spellSlotOptions } from "./spellUpcast.js";
 

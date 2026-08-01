@@ -24,6 +24,15 @@ const abilityPage = card => ({
   })
 });
 
+const combatPages = card => groupsOf(card.actions || [], 4)
+  .map((attacks, index, pages) => ({
+    type: "combat",
+    label: pages.length === 1
+      ? "COMBAT ACTIONS"
+      : `COMBAT ACTIONS ${index + 1}/${pages.length}`,
+    attacks
+  }));
+
 const featurePages = card => {
   const features = [
     ...(card.classFeatures || []).map(text => ({ label: "CLASS", text })),
@@ -49,7 +58,7 @@ const spellPages = card => groupsOf(card.spellDetails || [], 2)
 export const pregenPackPages = card => [
   { type: "portrait", label: "HERO FRONT" },
   abilityPage(card),
-  { type: "combat", label: "COMBAT ACTIONS", attacks: card.actions || [] },
+  ...combatPages(card),
   ...featurePages(card),
   { type: "gear", label: "EQUIPMENT & NOTES" },
   ...spellPages(card)

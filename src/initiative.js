@@ -1,4 +1,4 @@
-import { allCards } from "./data.js?v=level-3-pregens-1";
+import { allCards } from "./data.js?v=all-core-classes-1";
 
 const abilityOrder = (a, b) => {
   const left = a.abilities || [0,0,0,0,0,0];

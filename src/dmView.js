@@ -1,5 +1,5 @@
-import { allCards, rooms } from "./data.js?v=level-3-pregens-1";
-import { SLOT_KINDS } from "./schema.js?v=level-3-pregens-1";
+import { allCards, rooms } from "./data.js?v=all-core-classes-1";
+import { SLOT_KINDS } from "./schema.js?v=all-core-classes-1";
 import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 import { adventures, findAdventure } from "./adventures.js";
 

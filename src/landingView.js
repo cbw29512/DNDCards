@@ -1,6 +1,6 @@
-import { productDemoView } from "./productDemoView.js?v=level-3-pregens-1";
+import { productDemoView } from "./productDemoView.js?v=all-core-classes-1";
 import { symbolCardView } from "./symbolCardView.js";
-import { heroRosterView } from "./heroRosterView.js?v=level-3-pregens-1";
+import { heroRosterView } from "./heroRosterView.js?v=all-core-classes-1";
 
 export const landingView = error => `
   <main class="landing">
@@ -27,7 +27,7 @@ export const landingView = error => `
     </section>
     <section class="collection-metrics" aria-label="Dungeon Cards library highlights">
       <span><b>1,400+</b><small>PLAYABLE CARDS</small></span>
-      <span><b>323</b><small>PRE-GEN HERO LEVELS</small></span>
+      <span><b>24</b><small>LEVEL 3 ONE-SHOT HEROES</small></span>
       <span><b>650+</b><small>CREATURES &amp; NPCS</small></span>
       <span><b>161</b><small>EQUIPMENT CARDS</small></span>
       <span><b>30</b><small>CONDITION CARDS</small></span>

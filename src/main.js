@@ -1,21 +1,21 @@
-import { allCards } from "./data.js?v=level-3-pregens-1";
-import { libraryCards } from "./dmView.js?v=level-3-pregens-1";
+import { allCards } from "./data.js?v=all-core-classes-1";
+import { libraryCards } from "./dmView.js?v=all-core-classes-1";
 import {
   rollInitiative,
   finishTurn,
   readyAction,
   triggerReadyAction
-} from "./initiative.js?v=level-3-pregens-1";
-import { landingView } from "./landingView.js?v=level-3-pregens-1";
-import { libraryView } from "./libraryView.js?v=level-3-pregens-1";
-import { loadState, saveState, updateState, findCard } from "./state.js?v=level-3-pregens-1";
+} from "./initiative.js?v=all-core-classes-1";
+import { landingView } from "./landingView.js?v=all-core-classes-1";
+import { libraryView } from "./libraryView.js?v=all-core-classes-1";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=all-core-classes-1";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js?v=level-3-pregens-1";
+import { library } from "./libraryModel.js?v=all-core-classes-1";
 import { spellActionAtLevel } from "./spellUpcast.js";
-import { tableView } from "./tableView.js?v=level-3-pregens-1";
-import { handleGameBoardButton } from "./gameBoardController.js?v=level-3-pregens-1";
-import { pregenPackView } from "./pregenPackView.js?v=level-3-pregens-1";
+import { tableView } from "./tableView.js?v=all-core-classes-1";
+import { handleGameBoardButton } from "./gameBoardController.js?v=all-core-classes-1";
+import { pregenPackView } from "./pregenPackView.js?v=all-core-classes-1";
 
 let state = loadState();
 let libraryKind = null;

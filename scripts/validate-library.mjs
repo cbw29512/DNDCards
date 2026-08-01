@@ -5,14 +5,14 @@ import { parseFormula } from "../src/diceEngine.js";
 try {
   const symbolKey = new Set(["♥", "🛡", "➜", "⚔", "➶", "✦", "⬡", "◈", "↻", "⚡", "☕", "☾"]);
   if (library.rejected.length) throw new Error(`${library.rejected.length} catalog records were rejected.`);
-  if (library.cards.length !== 1438) throw new Error(`Expected 1,438 unique cards; found ${library.cards.length}.`);
+  if (library.cards.length !== 1446) throw new Error(`Expected 1,446 unique cards; found ${library.cards.length}.`);
   const missing = LIBRARY_KINDS.filter(kind =>
     kind !== "all" && !library.cards.some(card =>
       card.kind === kind || card.subtype === kind
     ));
   if (missing.length) throw new Error(`Empty required categories: ${missing.join(", ")}`);
-  if (importedCatalog.length !== 1340) {
-    throw new Error(`Expected 1,340 imported cards; found ${importedCatalog.length}.`);
+  if (importedCatalog.length !== 1348) {
+    throw new Error(`Expected 1,348 imported cards; found ${importedCatalog.length}.`);
   }
   for (const card of importedCatalog) {
     for (const action of [...(card.actions || []), ...(card.spellActions || [])]) {
