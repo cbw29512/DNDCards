@@ -1,5 +1,6 @@
-import { allCards, cards, rooms } from "./data.js?v=all-core-classes-1";
-import { createState } from "./schema.js?v=all-core-classes-1";
+import { allCards, cards, rooms } from "./data.js?v=rules-ui-audit-1";
+import { createState } from "./schema.js?v=rules-ui-audit-1";
+import { findAdventure } from "./adventures.js";
 
 const STORAGE_KEY = "dungeon-cards-standalone-v1";
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
@@ -13,9 +14,20 @@ export const loadState = () => {
     state.dmFrontCardIds ||= [];
     state.libraryBackIds ||= [];
     state.spellSlotByCard ||= {};
+    state.spellSlotsRemainingByCard ||= {};
+    state.resourceRemainingById ||= {};
+    state.temporaryHpByCard ||= {};
+    state.hitDiceByCard ||= {};
+    state.deathSavesByCard ||= {};
+    state.inspirationByCard ||= {};
     state.readyByEntryId ||= {};
     state.reactionSpentCardIds ||= [];
     state.readyHistory ||= [];
+    if (state.adventureId && !findAdventure(state.adventureId)) {
+      state.adventureId = null;
+      state.adventureComplete = false;
+      state.completedRoomIds = [];
+    }
     const legacyPreview = state.players.find(player => player.id === "player-preview");
     if (legacyPreview) {
       // Older builds stored the DM preview as a real player. Migrate that
@@ -31,6 +43,7 @@ export const loadState = () => {
     for (const room of rooms) {
       state.placedByRoom[room.id] ||= cards.filter(card => card.room === room.id).map(card => card.id);
     }
+    if (!rooms.some(room => room.id === state.roomId)) state.roomId = rooms[0]?.id || null;
     state.healthByCard ||= {};
     for (const card of allCards) {
       const statistics = card.stats || card.quickStats || [];

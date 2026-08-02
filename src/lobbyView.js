@@ -1,5 +1,6 @@
-import { characters } from "./data.js?v=all-core-classes-1";
+import { characters } from "./data.js?v=rules-ui-audit-1";
 import { cardView } from "./cardView.js?v=npc-lane-1";
+import { escapeHtml } from "./html.js";
 
 const escapeAttribute = value => String(value || "").replace(/[&<>"']/g, char =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" })[char]);
@@ -28,13 +29,13 @@ export const lobbyView = state => {
     <section class="lobby party-panel">
       <header><div><small>TABLE CODE</small><strong>${state.sessionCode}</strong></div>
       <span>${state.mode === "dm" ? "♟ PARTY ROSTER · DM VIEW" : "♟ YOUR PARTY"}</span></header>
-      <form id="join-form">
+      ${state.mode === "dm" ? `<form id="join-form">
         <label>Player name <input name="name" required maxlength="30" placeholder="Enter a name"></label>
         <button>Join table</button>
-      </form>
+      </form>` : ""}
       <div class="seats">${state.players.map(player => `
-        <button data-action="select-player" data-id="${player.id}" class="${player.id === state.activePlayerId ? "active" : ""}">
-          <b>${player.name}</b><span>${characters.find(card => card.id === player.characterId)?.title || "Choosing character"}</span>
+        <button ${state.mode === "dm" ? `data-action="select-player" data-id="${player.id}"` : "disabled"} class="${player.id === state.activePlayerId ? "active" : ""}">
+          <b>${escapeHtml(player.name)}</b><span>${escapeHtml(characters.find(card => card.id === player.characterId)?.title || "Choosing character")}</span>
         </button>`).join("")}</div>
       ${state.mode === "player" && active && !active.characterId ? `
         <div class="claim"><h2>Claim a ready-to-play hero</h2>

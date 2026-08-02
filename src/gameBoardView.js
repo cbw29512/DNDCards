@@ -1,8 +1,9 @@
-import { allCards, characters, rooms } from "./data.js?v=all-core-classes-1";
+import { allCards, characters, rooms } from "./data.js?v=rules-ui-audit-1";
 import { findAdventure } from "./adventures.js";
 import { cardView, emptyView } from "./cardView.js?v=unified-board-1";
-import { deriveCharacter } from "./characterEngine.js?v=all-core-classes-1";
+import { deriveCharacter } from "./characterEngine.js?v=rules-ui-audit-1";
 import { diceTrayView } from "./diceTrayView.js";
+import { escapeHtml } from "./html.js";
 
 const LANES = [
   { kind:"room", title:"Location", icon:"⌂" },
@@ -78,7 +79,7 @@ const playerRail = state => {
   const pending = player.id === "dm-preview" ? [] :
     (state.pendingItemsByPlayer[player.id] || []).map(id => allCards.find(card => card.id === id)).filter(Boolean);
   return `<aside class="character-sheet">
-    <header><small>YOUR CHARACTER</small><h2>${player.name}</h2></header>
+    <header><small>YOUR CHARACTER</small><h2>${escapeHtml(player.name)}</h2></header>
     ${state.identity?.role === "dm" ? `<label class="hero-select">Preview another character card
       <select data-action="preview-character-select">${heroOptions(character.id)}</select></label>` : ""}
     ${cardView(character, {

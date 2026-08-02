@@ -1,8 +1,11 @@
-import { allCards, cards } from "./data.js?v=all-core-classes-1";
+import { allCards, cards } from "./data.js?v=rules-ui-audit-1";
 import { findAdventure } from "./adventures.js";
 import { updateEquipmentState } from "./equipmentState.js";
-import { loadState, saveState } from "./stateStorage.js?v=all-core-classes-1";
+import { loadState, saveState } from "./stateStorage.js?v=rules-ui-audit-1";
 import { updateGameBoardState } from "./gameBoardState.js?v=unified-board-2";
+import { adjustResourceState, recoverResources } from "./resourceState.js";
+import { adjustSpellSlotState, recoverSpellSlots } from "./spellSlotState.js";
+import { recoverCharacterSheets, updateCharacterSheetState } from "./characterSheetState.js";
 
 const logError = (message, error) => console.error(`[Dungeon Cards] ${message}`, error);
 export { loadState, saveState };
@@ -11,6 +14,7 @@ export const updateState = (state, action) => {
     const next = structuredClone(state);
     next.lastError = null;
     if (action.type === "login-dm") {
+      if (!action.name.trim()) throw new Error("Enter a display name.");
       next.screen = "table";
       next.mode = "dm";
       next.tableTab = next.adventureId ? "board" : "adventure";
@@ -18,6 +22,7 @@ export const updateState = (state, action) => {
       next.identity = { role: "dm", name: action.name.trim() };
     }
     if (action.type === "login-player") {
+      if (!action.name.trim()) throw new Error("Enter a display name.");
       if (action.code.trim().toUpperCase() !== next.sessionCode) throw new Error("The table code does not match.");
       const id = `player-${Date.now()}`;
       next.players.push({ id, name: action.name.trim(), characterId: null, backpackIds: [] });
@@ -44,6 +49,9 @@ export const updateState = (state, action) => {
       next.spellSlotByCard ||= {};
       next.spellSlotByCard[action.id] = Number(action.value);
     }
+    if (action.type === "adjust-resource") adjustResourceState(next, action, allCards);
+    if (action.type === "adjust-spell-slot") adjustSpellSlotState(next, action, allCards);
+    updateCharacterSheetState(next, action, allCards);
     updateGameBoardState(next, action);
     if (action.type === "load-adventure") {
       const adventure = findAdventure(action.id);
@@ -128,8 +136,11 @@ export const updateState = (state, action) => {
       health.current = Math.max(0, Math.min(health.maximum, health.current + action.amount));
     }
     if (action.type === "rest") {
+      recoverResources(next, action.restType, allCards);
+      recoverSpellSlots(next, action.restType, allCards);
       next.usedResources = [];
       if (action.restType === "long") {
+        recoverCharacterSheets(next, allCards);
         for (const card of allCards.filter(candidate => candidate.kind === "character")) {
           const health = next.healthByCard[card.id];
           if (health) health.current = health.maximum;

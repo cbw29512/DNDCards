@@ -1,5 +1,5 @@
-import { levelThreePregens } from "./levelThreePregens.js?v=all-core-classes-1";
-import { heroRoster } from "./heroRosterData.js?v=all-core-classes-1";
+import { levelThreePregens } from "./levelThreePregens.js?v=rules-ui-audit-1";
+import { heroRoster } from "./heroRosterData.js?v=rules-ui-audit-1";
 
 const portraits = new Map(heroRoster.map(hero => [hero.name, hero.stem]));
 const startersById = new Map(levelThreePregens.map(card => [card.id, card]));

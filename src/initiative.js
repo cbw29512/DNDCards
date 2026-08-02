@@ -1,4 +1,5 @@
-import { allCards } from "./data.js?v=all-core-classes-1";
+import { allCards } from "./data.js?v=rules-ui-audit-1";
+import { recoverTurnResources } from "./resourceState.js";
 
 const abilityOrder = (a, b) => {
   const left = a.abilities || [0,0,0,0,0,0];
@@ -26,7 +27,8 @@ export const rollInitiative = (state, random = Math.random) => {
       return {
         entryId: `${card.id}-normal-${index}`, id: card.id, title: card.title,
         roll, total: roll + (card.initiative || 0), abilities: card.abilities,
-        openingTurn: false, groupSize: monsters.filter(monster => monster.id === card.id).length || 1
+        openingTurn: false, groupSize: Number(card.copies)
+          || monsters.filter(monster => monster.id === card.id).length || 1
       };
     }).sort(orderEntries);
     const opening = normal.filter(entry => entry.roll === 20)
@@ -56,7 +58,7 @@ export const finishTurn = state => {
         if (held.cardId === nextEntry.id) delete readyByEntryId[entryId];
       }
     }
-    return {
+    const next = {
       ...state, activeTurn: nextTurn,
       round: atEnd ? Math.max(1, state.round + 1) : entersRoundOne ? 1 : state.round,
       usedResources: [],
@@ -64,6 +66,8 @@ export const finishTurn = state => {
       reactionSpentCardIds: (state.reactionSpentCardIds || [])
         .filter(cardId => cardId !== nextEntry?.id)
     };
+    recoverTurnResources(next, allCards);
+    return next;
   } catch (error) {
     console.error("[Dungeon Cards] Could not advance the turn.", error);
     return state;

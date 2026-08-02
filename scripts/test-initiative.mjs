@@ -11,15 +11,15 @@ try {
     players: [
       { characterId:"pc-wendy" }, { characterId:"pc-bob" }
     ],
-    roomId:"inn", placedByRoom:{ inn:["monster-gremlin","monster-gremlin"] },
+    roomId:"heartbreak-inn", placedByRoom:{ "heartbreak-inn":["MON-002","MON-002"] },
     initiative:[], activeTurn:0, round:0, usedResources:[],
     readyByEntryId:{}, reactionSpentCardIds:[], readyHistory:[]
   };
   const rolls = [0.99, 0.5, 0.25];
   const state = rollInitiative(base, () => rolls.shift());
   assert.equal(state.initiative[0].openingTurn, true);
-  assert.equal(state.initiative.filter(entry => entry.id === "monster-gremlin").length, 1);
-  assert.equal(state.initiative.find(entry => entry.id === "monster-gremlin").groupSize, 2);
+  assert.equal(state.initiative.filter(entry => entry.id === "MON-002").length, 1);
+  assert.equal(state.initiative.find(entry => entry.id === "MON-002").groupSize, 2);
   assert.equal(state.round, 0);
   const openingReady = readyAction(state, "The gremlin moves", "Wendy casts a spell");
   const openingEntryId = openingReady.initiative[openingReady.activeTurn].entryId;

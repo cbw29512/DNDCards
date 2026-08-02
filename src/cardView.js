@@ -22,10 +22,11 @@ const statList = card => card.stats || card.quickStats || [];
 const actionButtons = (card, interactive, selectedLevel) => !interactive ? "" : `
   <div class="card-actions">${(card.actions || []).slice(0, 3).map(baseAction => {
     const action = spellActionAtLevel(card, baseAction, selectedLevel);
+    const componentDamage = (action.damageComponents || []).map(component => component.formula).join(" + ");
     return `
     <button data-action="roll-card-action" data-card-id="${escape(card.id)}" data-id="${escape(action.id)}">
       <b>${escape(action.icon || "◈")} ${escape(action.label)}</b>
-      <span>${escape(action.roll || (action.save ? `DC ${action.save.dc}` : ""))}${action.damage ? ` · ${escape(action.damage)}` : ""}</span>
+      <span>${escape(action.roll || (action.save ? `DC ${action.save.dc}` : ""))}${action.damage || componentDamage ? ` · ${escape(action.damage || componentDamage)}` : ""}</span>
     </button>`;
   }).join("")}</div>`;
 

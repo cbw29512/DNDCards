@@ -1,21 +1,22 @@
-import { allCards } from "./data.js?v=all-core-classes-1";
-import { libraryCards } from "./dmView.js?v=all-core-classes-1";
+import { allCards } from "./data.js?v=rules-ui-audit-1";
+import { libraryCards } from "./dmView.js?v=rules-ui-audit-1";
 import {
   rollInitiative,
   finishTurn,
   readyAction,
   triggerReadyAction
-} from "./initiative.js?v=all-core-classes-1";
-import { landingView } from "./landingView.js?v=all-core-classes-1";
-import { libraryView } from "./libraryView.js?v=all-core-classes-1";
-import { loadState, saveState, updateState, findCard } from "./state.js?v=all-core-classes-1";
+} from "./initiative.js?v=rules-ui-audit-1";
+import { landingView } from "./landingView.js?v=rules-ui-audit-1";
+import { libraryView } from "./libraryView.js?v=rules-ui-audit-1";
+import { loadState, saveState, updateState, findCard } from "./state.js?v=rules-ui-audit-1";
 import { executeCardAction } from "./diceEngine.js";
 import { rollResultView } from "./rollResultView.js";
-import { library } from "./libraryModel.js?v=all-core-classes-1";
+import { library } from "./libraryModel.js?v=rules-ui-audit-1";
 import { spellActionAtLevel } from "./spellUpcast.js";
-import { tableView } from "./tableView.js?v=all-core-classes-1";
-import { handleGameBoardButton } from "./gameBoardController.js?v=all-core-classes-1";
-import { pregenPackView } from "./pregenPackView.js?v=all-core-classes-1";
+import { tableView } from "./tableView.js?v=rules-ui-audit-1";
+import { handleGameBoardButton } from "./gameBoardController.js?v=rules-ui-audit-1";
+import { pregenPackView } from "./pregenPackView.js?v=rules-ui-audit-1";
+import { consumeSpellSlot } from "./spellSlotState.js";
 
 let state = loadState();
 let libraryKind = null;
@@ -81,20 +82,52 @@ root.addEventListener("click", event => {
       const rollCard = card.spellActions?.some(action => action.id === id)
         ? { ...card, actions: [...(card.actions || []), ...card.spellActions] }
         : card;
+      const baseAction = rollCard.actions?.find(candidate => candidate.id === id);
+      const slotLevel = Number(state.spellSlotByCard?.[button.dataset.slotKey || card.id]
+        || button.dataset.spellLevel || baseAction?.baseLevel || 0);
       const result = executeCardAction(rollCard, id, Math.random, {
-        slotLevel: state.spellSlotByCard?.[button.dataset.slotKey || card.id],
+        slotLevel,
         transformAction: spellActionAtLevel
       });
+      if (baseAction?.spellId && Number(baseAction.baseLevel) > 0) consumeSpellSlot(state, card, slotLevel);
       state.lastRoll = result;
       state.rollHistory = [result, ...state.rollHistory].slice(0, 10);
       if (result.action.cost && !state.usedResources.includes(result.action.cost)) state.usedResources.push(result.action.cost);
       saveState(state);
       return render();
     }
+    if (action === "cast-spell") {
+      const card = findCard(button.dataset.cardId);
+      const spell = card?.spellDetails?.find(candidate => candidate.id === id);
+      const slotLevel = Number(state.spellSlotByCard?.[button.dataset.slotKey]
+        || button.dataset.spellLevel || spell?.level || 0);
+      if (!card || !spell) throw new Error("That spell card could not be found.");
+      consumeSpellSlot(state, card, slotLevel);
+      state.lastRoll = {
+        cardId:card.id, cardTitle:card.title,
+        action:{ label:spell.name, kind:"spell", range:spell.range, effect:spell.description },
+        critical:false
+      };
+      state.rollHistory = [state.lastRoll, ...state.rollHistory].slice(0, 10);
+      saveState(state); return render();
+    }
     if (action === "close-roll") { state.lastRoll = null; saveState(state); return render(); }
+    if (action === "clear-error") { state.lastError = null; saveState(state); return render(); }
     if (action === "select-spell-slot") return;
-    if (action === "adjust-health") return dispatch({ type:"adjust-health", id, amount:Number(button.dataset.amount) });
+    if (action === "adjust-health") return dispatch({ type:"adjust-health", id:id || button.dataset.cardId, amount:Number(button.dataset.amount) });
+    if (["adjust-temp-hp", "adjust-hit-die", "adjust-death-save", "reset-death-saves", "toggle-inspiration"].includes(action)) return dispatch({
+      type:action, cardId:button.dataset.cardId, result:button.dataset.result,
+      amount:Number(button.dataset.amount || 0)
+    });
     if (action === "rest") return dispatch({ type:"rest", restType:id });
+    if (action === "adjust-resource") return dispatch({
+      type:"adjust-resource", cardId:button.dataset.cardId,
+      resourceId:button.dataset.resourceId, amount:Number(button.dataset.amount)
+    });
+    if (action === "adjust-spell-slot") return dispatch({
+      type:"adjust-spell-slot", cardId:button.dataset.cardId,
+      level:Number(button.dataset.level), amount:Number(button.dataset.amount)
+    });
     if (action === "open-card-library") {
       state.screen = "library"; saveState(state); return render();
     }
@@ -153,6 +186,20 @@ root.addEventListener("click", event => {
     dispatch({ type: action, id, value: id, slot: button.dataset.slot });
   } catch (error) {
     console.error("[Dungeon Cards] Button action failed.", error);
+    state.lastError = error instanceof Error ? error.message : "That control could not be used.";
+    saveState(state);
+    render();
+  }
+});
+
+root.addEventListener("keydown", event => {
+  try {
+    const control = event.target.closest('[role="button"][data-action]');
+    if (!control || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    control.click();
+  } catch (error) {
+    console.error("[Dungeon Cards] Keyboard control failed.", error);
   }
 });
 

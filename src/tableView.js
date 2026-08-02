@@ -1,19 +1,21 @@
-import { dmView } from "./dmView.js?v=all-core-classes-1";
+import { dmView } from "./dmView.js?v=rules-ui-audit-1";
 import { initiativeView } from "./initiativeView.js";
-import { lobbyView } from "./lobbyView.js?v=all-core-classes-1";
-import { playerView } from "./playerView.js?v=all-core-classes-1";
+import { lobbyView } from "./lobbyView.js?v=rules-ui-audit-1";
+import { playerView } from "./playerView.js?v=rules-ui-audit-1";
 import { printView } from "./printView.js?v=npc-lane-1";
 import { rollResultView } from "./rollResultView.js";
 import { symbolCardView } from "./symbolCardView.js";
 import { tableHeaderView } from "./tableHeaderView.js?v=unified-board-2";
 import { findAdventure } from "./adventures.js";
-import { gameBoardView } from "./gameBoardView.js?v=all-core-classes-1";
+import { gameBoardView } from "./gameBoardView.js?v=rules-ui-audit-1";
+import { escapeHtml } from "./html.js";
 
 export const tableView = state => {
   const adventure = findAdventure(state.adventureId);
   const needsAdventureSetup = state.identity?.role === "dm"
     && (!adventure || state.adventureComplete);
   return `<div class="game-shell">${tableHeaderView(state)}
+  ${state.lastError ? `<p class="table-error" role="alert"><span>${escapeHtml(state.lastError)}</span><button data-action="clear-error" aria-label="Dismiss message">×</button></p>` : ""}
   <section class="quest-banner"><div><small>${adventure ? "ACTIVE ADVENTURE" : "DUNGEON CARDS PLATFORM"}</small>
   <h1>${adventure?.title || "Choose an adventure"}</h1></div>
   <p><span>◆</span> ${adventure?.subtitle || "Showcase · Create · Play"}</p></section>

@@ -1,6 +1,6 @@
-import { productDemoView } from "./productDemoView.js?v=all-core-classes-1";
+import { productDemoView } from "./productDemoView.js?v=rules-ui-audit-1";
 import { symbolCardView } from "./symbolCardView.js";
-import { heroRosterView } from "./heroRosterView.js?v=all-core-classes-1";
+import { heroRosterView } from "./heroRosterView.js?v=rules-ui-audit-1";
 
 export const landingView = error => `
   <main class="landing">
@@ -14,8 +14,8 @@ export const landingView = error => `
         <h1>Your whole adventure,<br><em>played from cards.</em></h1>
         <p>Buy a complete adventure, claim the included heroes, and begin with almost no prep. The cards tell the DM what to reveal, read, run, and award—while the digital table handles the busy work.</p>
         <div class="landing-actions">
-          <button data-action="choose-login" data-id="dm">Enter as Dungeon Master</button>
-          <button class="secondary" data-action="choose-login" data-id="player">Join as Player</button>
+          <button data-action="choose-login" data-id="dm">Try the DM table</button>
+          <button class="secondary" data-action="choose-login" data-id="player">Try the Player table</button>
           <button class="secondary" data-action="open-card-library">Browse the card library</button>
         </div>
       </div>
@@ -32,6 +32,7 @@ export const landingView = error => `
       <span><b>161</b><small>EQUIPMENT CARDS</small></span>
       <span><b>30</b><small>CONDITION CARDS</small></span>
     </section>
+    <section class="prototype-status"><strong>PLAYABLE PROTOTYPE</strong><p><b>Working now:</b> local DM/player views, adventure runner, card rolls, initiative, resources, rests, equipment, library, and printing. <b>Roadmap:</b> cross-device table codes, QR ownership, accounts, checkout, and physical fulfillment.</p></section>
     <section class="symbol-key-feature" id="symbol-key">
       <div class="symbol-key-card-stage"><span>PACK CARD 01</span>${symbolCardView("symbol-card--landing")}</div>
       <div class="symbol-key-copy">
@@ -89,7 +90,7 @@ export const landingView = error => `
       <div><small>FROM PURCHASE TO FIRST SCENE</small><h2>Tonight's adventure can be ready in 15 minutes.</h2></div>
       <ol><li><b>1 minute</b><span>Scan or open the adventure pack.</span></li>
       <li><b>3 minutes</b><span>DM reviews the quest path and opening card.</span></li>
-      <li><b>5 minutes</b><span>Players join by code and claim pre-generated heroes.</span></li>
+      <li><b>5 minutes</b><span>Players claim pre-generated heroes; synchronized table codes are the next online layer.</span></li>
       <li><b>3 minutes</b><span>Place the first room and any starting NPC cards.</span></li>
       <li><b>3 minutes</b><span>Read the opening card and begin playing.</span></li></ol>
       <p>No monster-book searching. No character creation requirement. No encounter spreadsheet. No stack of disconnected notes.</p>
@@ -118,8 +119,8 @@ export const landingView = error => `
       <small>LESS PREP · MORE PLAY · A DECK THAT KEEPS GROWING</small>
       <h2>Build tonight's dungeon one card at a time.</h2>
       <p>Start with a complete guided one-shot or bring your own collection to the table.</p>
-      <div><button data-action="choose-login" data-id="dm">Start a DM table</button>
-      <button class="secondary" data-action="choose-login" data-id="player">Join a game</button></div>
+      <div><button data-action="choose-login" data-id="dm">Try the DM table</button>
+      <button class="secondary" data-action="choose-login" data-id="player">Try the Player table</button></div>
     </section>
     <dialog id="login-dialog" class="login-dialog">
       <button class="dialog-close" data-action="close-login" aria-label="Close">×</button>

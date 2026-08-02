@@ -1,4 +1,5 @@
 import { findAdventure } from "./adventures.js";
+import { escapeHtml } from "./html.js";
 
 export const tableHeaderView = state => {
   const isDm = state.identity?.role === "dm";
@@ -10,7 +11,7 @@ export const tableHeaderView = state => {
     <div class="game-status">
       <span class="status-rune">✦</span>
       <div><small>${isDm ? "DUNGEON MASTER" : "ADVENTURER"}</small>
-      <strong>${state.identity?.name || (isDm ? "Game Master" : "Player")}</strong></div>
+      <strong>${escapeHtml(state.identity?.name || (isDm ? "Game Master" : "Player"))}</strong></div>
     </div>
     <nav aria-label="Game controls">
       <button data-action="table-tab" data-id="board" class="active">⚔ Game Board</button>

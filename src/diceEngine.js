@@ -38,7 +38,15 @@ export const executeCardAction = (card, actionId, random = Math.random, options 
       const attack = rollFormula(action.roll, random);
       const critical = attack.dice[0] === 20;
       const damage = action.damage ? rollFormula(action.damage, random, critical) : null;
-      return { cardId: card.id, cardTitle: card.title, action, attack, damage, critical };
+      const damageComponents = (action.damageComponents || []).map(component => ({
+        ...component,
+        roll:rollFormula(component.formula, random, critical)
+      }));
+      return {
+        cardId:card.id, cardTitle:card.title, action, attack, damage, critical,
+        damageComponents,
+        damageTotal:damageComponents.reduce((sum, component) => sum + component.roll.total, 0)
+      };
     }
     const roll = action.roll ? rollFormula(action.roll, random) : null;
     const damage = action.damage ? rollFormula(action.damage, random) : null;

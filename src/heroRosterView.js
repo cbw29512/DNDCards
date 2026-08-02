@@ -1,4 +1,4 @@
-import { heroRoster } from "./heroRosterData.js?v=all-core-classes-1";
+import { heroRoster } from "./heroRosterData.js?v=rules-ui-audit-1";
 
 const escape = value => String(value).replace(/[&<>"']/g, character =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" })[character]

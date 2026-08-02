@@ -9,26 +9,26 @@ globalThis.localStorage = {
 try {
   const { loadState, updateState } = await import("../src/state.js");
   let state = loadState();
-  state = updateState(state, { type:"load-adventure", id:"wishing-cake" });
-  assert.equal(state.roomId, "square");
-  assert.deepEqual(state.placedByRoom.square, ["room-square", "npc-wendy"]);
-  state.revealedIds = ["room-square"];
+  state = updateState(state, { type:"load-adventure", id:"first-chime-hearthglow" });
+  assert.equal(state.roomId, "lanternhome");
+  assert.deepEqual(state.placedByRoom.lanternhome, ["LOC-005", "NPC-001"]);
+  state.revealedIds = ["LOC-005"];
   state = updateState(state, { type:"next-room" });
-  assert.equal(state.roomId, "inn");
-  assert.deepEqual(state.completedRoomIds, ["square"]);
+  assert.equal(state.roomId, "heartbreak-inn");
+  assert.deepEqual(state.completedRoomIds, ["lanternhome"]);
   assert.deepEqual(state.revealedIds, []);
-  assert.ok(state.placedByRoom.inn.includes("monster-gremlin"));
-  assert.ok(state.placedByRoom.inn.includes("clue-toast"));
+  assert.ok(state.placedByRoom["heartbreak-inn"].includes("MON-002"));
+  assert.ok(state.placedByRoom["heartbreak-inn"].includes("TRAP-002"));
   assert.equal(state.players.length, 0);
   state.identity = { role:"dm", name:"DM" };
   state = updateState(state, { type:"preview-character", id:"pc-wendy" });
   assert.equal(state.previewCharacterId, "pc-wendy");
   assert.equal(state.players.length, 0, "DM character preview must not create a player");
   state = updateState(state, { type:"event" });
-  assert.match(state.activeEventId, /^event-\d+$/);
+  assert.match(state.activeEventId, /^EVENT-\d+$/);
   state = updateState(state, { type:"previous-room" });
-  assert.equal(state.roomId, "square");
-  for (const roomId of ["inn", "chapel", "shop"]) {
+  assert.equal(state.roomId, "lanternhome");
+  for (const roomId of ["heartbreak-inn", "last-lantern", "copper-kettle", "moon-mortar", "bellfoundry"]) {
     state.roomId = roomId;
     state = updateState(state, { type:"next-room" });
   }

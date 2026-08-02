@@ -1,4 +1,4 @@
-import { rawLibraryCatalog } from "./libraryCatalog.js?v=all-core-classes-1";
+import { rawLibraryCatalog } from "./libraryCatalog.js?v=rules-ui-audit-1";
 
 export const LIBRARY_KINDS = [
   "all", "room", "npc", "monster", "wild-shape", "trap", "treasure",

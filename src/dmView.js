@@ -1,5 +1,5 @@
-import { allCards, rooms } from "./data.js?v=all-core-classes-1";
-import { SLOT_KINDS } from "./schema.js?v=all-core-classes-1";
+import { allCards, rooms } from "./data.js?v=rules-ui-audit-1";
+import { SLOT_KINDS } from "./schema.js?v=rules-ui-audit-1";
 import { cardView, emptyView } from "./cardView.js?v=npc-lane-1";
 import { adventures, findAdventure } from "./adventures.js";
 
@@ -44,7 +44,7 @@ export const dmView = state => {
             <button class="remove" data-action="remove" data-id="${card.id}">Remove</button></div>`).join("") : emptyView(`Add a ${kind} card`)}</div>
         </section>`;
       }).join("")}</div>
-      ${state.roomId === "inn" ? eventView(state) : ""}
+      ${state.roomId === "heartbreak-inn" ? eventView(state) : ""}
     </main>
     <dialog id="library" class="card-vault"><header><div><small>DM CARD VAULT</small><h2>Choose a card</h2></div>
       <button data-action="close-library">Close</button></header>

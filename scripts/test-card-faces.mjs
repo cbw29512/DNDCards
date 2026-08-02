@@ -11,18 +11,18 @@ globalThis.localStorage = {
   setItem(_key, value) { this.value = value; }
 };
 
-const monster = cards.find(card => card.id === "monster-gremlin");
+const monster = cards.find(card => card.id === "MON-002");
 const front = cardView(monster, { face:"front" });
 const back = cardView(monster, { face:"back", dm:true });
 assert.match(front, /card--front/);
 assert.match(front, /card-slot-band--monster/);
 assert.match(front, /Monster slot/);
-assert.match(front, /Jam Gremlin/);
+assert.match(front, /Bellglass Gremlin/);
 assert.match(front, /jam-gremlin-card-art\.webp/);
 assert.doesNotMatch(front, /PRIVATE DM INFORMATION/);
 assert.match(back, /card--back/);
 assert.match(back, /PRIVATE DM INFORMATION/);
-assert.match(back, /Two gremlins act as one initiative group/);
+assert.match(back, /Two act as one initiative group/);
 assert.match(cardView(monster, { face:"back", flip:true }), /data-action="flip-card"/);
 
 const initial = { ...createState(), identity:{ role:"dm", name:"Test" } };

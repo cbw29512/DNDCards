@@ -1,69 +1,14 @@
-import { importedCatalog } from "./importedCatalog.js?v=all-core-classes-1";
+import { importedCatalog } from "./importedCatalog.js?v=rules-ui-audit-1";
 import { wildShapeCatalog } from "./wildShapeCatalog.js";
-import { enhancePregen } from "./pregenCollection.js?v=all-core-classes-1";
+import { enhancePregen } from "./pregenCollection.js?v=rules-ui-audit-1";
+import { hearthglowCards, hearthglowEvents, hearthglowRooms } from "./hearthglowAdventure.js";
 
-export const rooms = [
-  { id: "square", number: 1, title: "Hearthglow Square" },
-  { id: "inn", number: 2, title: "The Heartbreak Inn" },
-  { id: "chapel", number: 3, title: "Chapel of Shared Wishes" },
-  { id: "shop", number: 4, title: "Candlewick Curios" }
-];
+export const rooms = hearthglowRooms;
+export const cards = hearthglowCards.filter(card => card.kind !== "event");
+export const events = hearthglowEvents;
 
 const card = (id, kind, title, room, playerText, dmText, stats = [], combat = {}) =>
-  ({ id, kind, title, room, playerText, dmText, stats, ...combat });
-
-export const cards = [
-  card("room-square", "room", "Hearthglow Square", "square",
-    "Lanterns glow like captured stars while birthday ribbons dance above the cobbles.",
-    "Welcome the party and reveal Wendy's invitation."),
-  card("npc-wendy", "npc", "Wendy, Keeper of the Wish", "square",
-    "Wendy holds an unlit candle and smiles as though she has been waiting for you.",
-    "Keep Wendy central. She knows kindness—not force—restores the final wish."),
-  card("monster-gremlin", "monster", "Jam Gremlin", "inn",
-    "A jam-smeared creature springs from the pantry with a spoon held like a sword.",
-    "Two gremlins act as one initiative group.", ["♥ 18", "🛡 13", "⚔ Spoon +4 · 1d6+2"], {
-      art:"assets/jam-gremlin-card-art.webp",
-      initiative: 2, abilities: [8,15,12,10,11,14],
-      actions: [
-        { id:"spoon", label:"Spoon Swipe", icon:"⚔", kind:"attack", roll:"1d20+4", damage:"1d6+2", range:"5 ft.", cost:"Action" },
-        { id:"splat", label:"Berry Splat", icon:"➶", kind:"effect", damage:"2d6", save:{ ability:"Dexterity", dc:12 }, range:"30 ft.", effect:"Speed −10 ft. until next turn.", cost:"Action" }
-      ]
-    }),
-  card("trap-candles", "trap", "Candle-Snuffer Trap", "chapel",
-    "A cold breath circles the candles. Their flames bend toward the dark.",
-    "DC 13 Perception. A birthday memory spoken aloud disarms it.", ["DC 13", "Effect: lights extinguish"], {
-      actions: [{ id:"snuff", label:"Trigger Trap", icon:"⬡", kind:"effect", damage:"1d6", save:{ ability:"Dexterity", dc:13 }, range:"Room", effect:"Lights extinguish.", cost:"Free/interact" }]
-    }),
-  card("treasure-charm", "treasure", "Wishkeeper Charm", "chapel",
-    "A tiny golden cake charm warms in your palm.",
-    "A player may reroll one failed saving throw.", ["1 use", "Tradeable"]),
-  card("treasure-emberblade", "treasure", "Emberblade +1", "shop",
-    "A bright steel sword glows like a candle flame without giving off smoke.",
-    "A homebrew demonstration item. Equip it in one hand to unlock its attack.", ["⚔ +1", "1d8 slashing", "1d4 fire"], {
-      equipSlots:["mainHand", "offHand"],
-      modifiers:[],
-      actions:[{
-        id:"ember-slash", label:"Ember Slash", icon:"⚔", kind:"equippedAttack",
-        attackType:"melee", ability:"strength", proficiency:true, attackBonus:1, range:"5 ft.",
-        damageComponents:[
-          { label:"Sword", icon:"⚔", formula:"1d8", ability:"strength", flatBonus:1, damageType:"slashing" },
-          { label:"Flame", icon:"🔥", formula:"1d4", damageType:"fire" }
-        ]
-      }]
-    }),
-  card("clue-toast", "clue", "The Forgotten Toast", "inn",
-    "Scratched beneath the table: “A wish shared freely returns twice.”",
-    "This is a required endgame clue. Reveal it before the finale."),
-  card("room-inn", "room", "The Heartbreak Inn", "inn",
-    "Music falters inside a warm inn decorated for a birthday nobody remembers.",
-    "Roll one cozy event whenever the party visits."),
-  card("room-chapel", "room", "Chapel of Shared Wishes", "chapel",
-    "Hundreds of candles wait in silence beneath a ceiling painted with constellations.",
-    "The trap protects the charm; compassion bypasses it."),
-  card("room-shop", "room", "Candlewick Curios", "shop",
-    "Shelves lean beneath wrapped parcels, singing kettles, and bottles of bottled laughter.",
-    "Offer the charm clue if the party missed it.")
-];
+  ({ id, kind, title, room, playerText, dmText, quickStats:stats, ...combat });
 
 const baseCharacters = [
   card("pc-wendy", "character", "Wendy the Wishkeeper", null,
@@ -91,15 +36,6 @@ const baseCharacters = [
       ]
     })
 ];
-
-export const events = Array.from({ length: 10 }, (_, index) =>
-  card(`event-${index + 1}`, "event", [
-    "The Forgotten Face", "Jam for Gremlins", "An Unremembered Toast",
-    "The Portrait Moth", "Someone Who Remembers", "A Voice in the Fire",
-    "The Cake-Hungry Hat", "The Doors Lock", "The Forbidden Tunnel",
-    "The Truth Bell Cracks"
-  ][index], "inn", "A birthday mystery unfolds in the inn.",
-  `Event ${index + 1}: offer a cozy clue or gentle complication.`));
 
 const importedCharacters = importedCatalog
   .filter(card => card.kind === "character")

@@ -1,6 +1,7 @@
-import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=all-core-classes-1";
+import { filterLibrary, LIBRARY_KINDS, library } from "./libraryModel.js?v=rules-ui-audit-1";
 import { symbolCardView } from "./symbolCardView.js";
 import { spellActionAtLevel, spellSlotOptions } from "./spellUpcast.js";
+import { escapeAttribute, escapeHtml } from "./html.js";
 
 const labels = {
   all: "All cards", room: "Rooms", npc: "NPCs", monster: "Monsters",
@@ -24,14 +25,11 @@ const slotNames = {
   "wild-shape":"Wild Shape slot"
 };
 
-const escapeAttribute = value => String(value).replace(/[&<>"']/g, char =>
-  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
-
 const spellSlotControl = (card, selectedLevel) => {
   const options = spellSlotOptions(card, selectedLevel);
   if (!options.length) return "";
   return `<label class="spell-slot-picker"><span>CAST USING</span>
-    <select data-action="select-spell-slot" data-card-id="${card.id}"
+    <select data-action="select-spell-slot" data-card-id="${escapeAttribute(card.id)}"
       aria-label="Spell slot for ${escapeAttribute(card.title)}">
       ${options.map(option => `<option value="${option.level}" ${option.selected ? "selected" : ""}>
         Level ${option.level}${option.level === options[0].level ? " (base)" : ""}
@@ -55,21 +53,21 @@ const libraryCard = (card, backIds, spellSlotByCard) => {
     ? `<div class="wild-actions">${card.actions.map(baseAction => {
       const action = spellActionAtLevel(card, baseAction, selectedSlot);
       return `<button data-action="roll-card-action"
-        data-card-id="${card.id}" data-id="${action.id}">
-        <b>${action.icon} ${action.label}</b><small>${action.roll}${action.damage ? ` · ${action.damage}` : ""}</small>
+        data-card-id="${escapeAttribute(card.id)}" data-id="${escapeAttribute(action.id)}">
+        <b>${escapeHtml(action.icon)} ${escapeHtml(action.label)}</b><small>${escapeHtml(action.roll)}${action.damage ? ` · ${escapeHtml(action.damage)}` : ""}</small>
       </button>`;
     }).join("")}</div>` : "";
-  return `<article class="library-card library-card--${card.kind} library-card--${isBack ? "back" : "front"} ${hasArt ? "library-card--has-art" : ""}"
+  return `<article class="library-card library-card--${escapeAttribute(card.kind)} library-card--${isBack ? "back" : "front"} ${hasArt ? "library-card--has-art" : ""}"
     ${artStyle}
-    data-action="flip-library-card" data-id="${card.id}" role="button" tabindex="0"
+    data-action="flip-library-card" data-id="${escapeAttribute(card.id)}" role="button" tabindex="0"
     aria-label="Flip ${escapeAttribute(card.title)} to its ${isBack ? "player front" : "DM back"}">
     <div class="library-card__band">
-      <b>${icons[card.kind]}</b><span><small>${slotNames[card.kind] || card.kind}</small>
-      <strong class="${card.title.length > 24 ? "card-title--long" : ""}">${card.title}</strong></span>
+      <b>${escapeHtml(icons[card.kind])}</b><span><small>${escapeHtml(slotNames[card.kind] || card.kind)}</small>
+      <strong class="${card.title.length > 24 ? "card-title--long" : ""}">${escapeHtml(card.title)}</strong></span>
     </div>
-    <div class="library-card__body"><small>${isBack ? "PRIVATE DM SIDE" : "PLAYER SIDE"} · ${card.roomNumber ? `ROOM ${card.roomNumber} · ` : ""}${card.id}</small>
-      <p>${isBack ? card.dmText || "Use the player-facing description and the listed card rules." : card.playerText}</p>
-      ${card.quickStats?.length ? `<ul>${card.quickStats.map(stat => `<li>${stat}</li>`).join("")}</ul>` : ""}
+    <div class="library-card__body"><small>${isBack ? "PRIVATE DM SIDE" : "PLAYER SIDE"} · ${card.roomNumber ? `ROOM ${escapeHtml(card.roomNumber)} · ` : ""}${escapeHtml(card.id)}</small>
+      <p>${escapeHtml(isBack ? card.dmText || "Use the player-facing description and the listed card rules." : card.playerText)}</p>
+      ${card.quickStats?.length ? `<ul>${card.quickStats.map(stat => `<li>${escapeHtml(stat)}</li>`).join("")}</ul>` : ""}
       ${isBack ? `${spellSlotControl(card, selectedSlot)}${abilityRow}${actionButtons}` : ""}
       <footer>↻ Click card to view ${isBack ? "player front" : "DM back"}</footer>
     </div>

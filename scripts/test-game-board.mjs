@@ -20,27 +20,27 @@ assert.equal(result.damageComponents[1].damageType, "fire");
 assert.equal(result.damageTotal, 14);
 const dmState = {
   ...createState(), identity:{ role:"dm", name:"DM" }, tableTab:"board",
-  adventureId:"wishing-cake", roomId:"inn",
+  adventureId:"first-chime-hearthglow", roomId:"heartbreak-inn",
   completedRoomIds:[],
-  activeEventId:"event-1",
-  placedByRoom:{ square:["room-square", "npc-wendy"] }, healthByCard:{}
+  activeEventId:"EVENT-01",
+  placedByRoom:{ lanternhome:["LOC-005", "NPC-001"] }, healthByCard:{}
 };
-dmState.placedByRoom.inn = ["room-inn", "monster-gremlin", "clue-toast"];
+dmState.placedByRoom["heartbreak-inn"] = ["LOC-001", "MON-002", "CLUE-003"];
 const dmBoard = gameBoardView(dmState);
 assert.match(dmBoard, />NPCs</);
 assert.match(dmBoard, />Clues</);
 assert.match(dmBoard, />Events</);
-assert.match(dmBoard, /The Forgotten Toast/);
-assert.match(dmBoard, /The Forgotten Face/);
-assert.match(dmBoard, /ROOM 2 OF 4/);
+assert.match(dmBoard, /The Missing Third Verse/);
+assert.match(dmBoard, /A Forgotten Face/);
+assert.match(dmBoard, /ROOM 2 OF 6/);
 assert.match(dmBoard, /Next room/);
 const hiddenPlayer = { ...dmState, identity:{ role:"player", name:"Hero" }, boardPerspective:"player" };
-assert.doesNotMatch(gameBoardView(hiddenPlayer), /The Forgotten Toast/);
-assert.doesNotMatch(gameBoardView(hiddenPlayer), /The Forgotten Face/);
+assert.doesNotMatch(gameBoardView(hiddenPlayer), /The Missing Third Verse/);
+assert.doesNotMatch(gameBoardView(hiddenPlayer), /A Forgotten Face/);
 const revealedPlayer = {
   ...hiddenPlayer,
-  revealedIds:["clue-toast", "event-1"]
+  revealedIds:["CLUE-003", "EVENT-01"]
 };
-assert.match(gameBoardView(revealedPlayer), /The Forgotten Toast/);
-assert.match(gameBoardView(revealedPlayer), /The Forgotten Face/);
+assert.match(gameBoardView(revealedPlayer), /The Missing Third Verse/);
+assert.match(gameBoardView(revealedPlayer), /A Forgotten Face/);
 console.log("Game board engine tests passed.");

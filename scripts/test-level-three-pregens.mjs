@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { levelThreePregens } from "../src/levelThreePregens.js";
-import { pregenPackPages } from "../src/pregenPackModel.js";
+import { pregenPackPages, skillRows } from "../src/pregenPackModel.js";
 import { pregenPackView } from "../src/pregenPackView.js";
 import { executeCardAction } from "../src/diceEngine.js";
 import { spellActionAtLevel } from "../src/spellUpcast.js";
@@ -34,9 +34,13 @@ for (const card of starters) {
   assert.ok(card.actions.length >= 2);
   const pages = pregenPackPages(card);
   assert.equal(pages[0].type, "portrait");
-  assert.ok(pages.length >= 5);
+  assert.ok(pages.some(page => page.type === "status"));
+  assert.ok(pages.some(page => page.type === "rules"));
+  assert.equal(pages.filter(page => page.type === "skills").length, 2);
+  assert.equal(skillRows(card).length, 18);
+  assert.ok(pages.length >= 9);
   const caster = card.spellcasting.kind !== "none";
-  assert.equal(pages.at(-1).type, caster ? "spells" : "gear");
+  assert.equal(pages.at(-1).type, caster ? "spells" : "rules");
   if (caster) {
     assert.ok(card.spellDetails.length >= 3);
     assert.ok(card.spellSaveDc >= 10);

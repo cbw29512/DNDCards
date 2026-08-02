@@ -1,7 +1,7 @@
-import { characters } from "./data.js?v=all-core-classes-1";
-import { findCard } from "./state.js?v=all-core-classes-1";
+import { characters } from "./data.js?v=rules-ui-audit-1";
+import { findCard } from "./state.js?v=rules-ui-audit-1";
 import { rollFormula } from "./diceEngine.js";
-import { executeEquippedAttack } from "./characterEngine.js?v=all-core-classes-1";
+import { executeEquippedAttack } from "./characterEngine.js?v=rules-ui-audit-1";
 
 export const handleGameBoardButton = (state, button) => {
   try {
