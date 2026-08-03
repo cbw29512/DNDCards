@@ -17,11 +17,12 @@ export const routeStateFromHash = hash => {
       communityFilters: {
         system: params.get("system") || "all",
         role: params.get("role") || "all"
-      }
+      },
+      section: params.get("section") || ""
     };
   } catch (error) {
     console.error("[Find Your Table] Route parsing failed.", error);
-    return { route:"home", communityFilters:{ system:"all", role:"all" } };
+    return { route:"home", communityFilters:{ system:"all", role:"all" }, section:"" };
   }
 };
 
