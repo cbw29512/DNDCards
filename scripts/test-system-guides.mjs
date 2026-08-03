@@ -22,8 +22,15 @@ try {
   assert.ok(communitySchema.privacy.includes("No public email or phone number"));
   assert.deepEqual(routeStateFromHash("#/community?system=daggerheart&role=gm"), {
     route:"community",
-    communityFilters:{ system:"daggerheart", role:"gm" }
+    communityFilters:{ system:"daggerheart", role:"gm" },
+    section:""
   });
+  assert.deepEqual(routeStateFromHash("#/system/dnd-2024?section=gm-guide"), {
+    route:"system/dnd-2024",
+    communityFilters:{ system:"all", role:"all" },
+    section:"gm-guide"
+  });
+  assert.match(siteView("system/dnd-2024"), /section=gm-guide/);
   assert.match(siteView("home"), /So you want to play a/);
   assert.match(siteView("community", null, { communityFilters:{ system:"daggerheart", role:"gm" } }), /Seeking a GM/);
   console.log("Multi-system guide tests passed.");
