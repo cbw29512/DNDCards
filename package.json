@@ -1,0 +1,8 @@
+{
+  "name": "dungeon-cards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:system-guides": "node scripts/test-system-guides.mjs"
+  }
+}
