@@ -61,7 +61,8 @@ It is a production checklist, not legal advice. Recheck the controlling license 
 - Website treatment: independent commentary and a high-level teaching overview.
 - Dark Pack supports specified non-commercial fan activities and has required notices and branding.
 - Storytellers Vault is the authorized community marketplace for specified commercial tabletop books.
-- Do not reproduce protected rules text, clan or Discipline descriptions, tables, art, symbols, logos, setting text, or trade dress.
+- World of Darkness Unbound is a separate agreement for independent Vampire: The Masquerade Fifth Edition video games distributed through itch.io; it is not a general license for tabletop supplements, card products, or commercial rules websites.
+- Do not reproduce protected rules text, clan or Discipline descriptions, tables, art, symbols, logos, setting text, or trade dress outside the exact permissions of an applicable program.
 
 ## Repository-wide rules
 
