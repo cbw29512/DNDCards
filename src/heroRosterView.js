@@ -18,6 +18,8 @@ export const heroRosterView = () => `
       <h2>Choose the card that makes you want to play.</h2>
       <p>Every core class is ready at level 3 in both 2014 and 2024 rules, with a portrait front and a complete accordion back: statistics, attacks, resources, equipment, features, and separate spell cards. Select any hero to open the playable pack.</p>
       <div><span><b>24</b> level 3 starter packs</span><span><b>12</b> core classes</span><span><b>0</b> character-sheet prep</span></div>
+      <button class="hero-roster__starter" data-action="launch-starter">Play the starter adventure now</button>
+      <p class="hero-roster__starter-note">Opens <b>The First Chime of Hearthglow</b> immediately in the local DM table—no account or setup required.</p>
     </header>
     <div class="hero-roster__grid">
       ${heroRoster.map(hero => {

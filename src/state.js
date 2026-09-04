@@ -1,5 +1,6 @@
-import { allCards, cards } from "./data.js?v=rules-ui-audit-1";
+import { allCards } from "./data.js?v=rules-ui-audit-1";
 import { findAdventure } from "./adventures.js";
+import { loadAdventureIntoState } from "./adventureState.js";
 import { updateEquipmentState } from "./equipmentState.js";
 import { loadState, saveState } from "./stateStorage.js?v=rules-ui-audit-1";
 import { updateGameBoardState } from "./gameBoardState.js?v=unified-board-2";
@@ -33,6 +34,13 @@ export const updateState = (state, action) => {
       next.boardPerspective = "player";
       next.identity = { role: "player", name: action.name.trim(), playerId: id };
     }
+    if (action.type === "launch-starter") {
+      next.screen = "table";
+      next.mode = "dm";
+      next.boardPerspective = "dm";
+      next.identity = { role: "dm", name: "Demo DM" };
+      loadAdventureIntoState(next, "first-chime-hearthglow");
+    }
     if (action.type === "logout") {
       next.screen = "landing";
       next.identity = null;
@@ -53,20 +61,7 @@ export const updateState = (state, action) => {
     if (action.type === "adjust-spell-slot") adjustSpellSlotState(next, action, allCards);
     updateCharacterSheetState(next, action, allCards);
     updateGameBoardState(next, action);
-    if (action.type === "load-adventure") {
-      const adventure = findAdventure(action.id);
-      if (!adventure) throw new Error("That adventure pack could not be found.");
-      next.adventureId = adventure.id;
-      next.adventureComplete = false;
-      next.completedRoomIds = [];
-      next.roomId = adventure.roomIds[0];
-      for (const roomId of adventure.roomIds) {
-        next.placedByRoom[roomId] = cards.filter(card => card.room === roomId).map(card => card.id);
-      }
-      next.revealedIds = [];
-      next.activeEventId = null;
-      next.tableTab = "board";
-    }
+    if (action.type === "load-adventure") loadAdventureIntoState(next, action.id);
     if (action.type === "next-room" || action.type === "previous-room") {
       const adventure = findAdventure(next.adventureId);
       if (!adventure) throw new Error("Load an adventure before changing rooms.");

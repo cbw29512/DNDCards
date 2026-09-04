@@ -15,6 +15,8 @@ try {
   assert.equal((view.match(/data-action="open-pregen-pack"/g) || []).length, rosterNames.length);
   assert.equal((view.match(/tabindex="0"/g) || []).length, rosterNames.length);
   assert.equal((view.match(/loading="lazy"/g) || []).length, rosterNames.length);
+  assert.equal((view.match(/data-action="launch-starter"/g) || []).length, 1);
+  assert.match(view, /The First Chime of Hearthglow/);
 
   for (const name of rosterNames) {
     const starter = characters.find(card => card.title === `${name} · Level 3`);

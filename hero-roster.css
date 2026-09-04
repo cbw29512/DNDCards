@@ -52,6 +52,28 @@
   color: #f0cb67;
 }
 
+.hero-roster__starter {
+  margin: 1.35rem auto .55rem;
+  padding: .85rem 1.2rem;
+  color: #21101f;
+  background: #f0cb67;
+  border: 0;
+  border-radius: .55rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.hero-roster__starter:hover,
+.hero-roster__starter:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px #0007;
+}
+
+.hero-roster > header .hero-roster__starter-note {
+  color: #bfb0bc;
+  font-size: .78rem;
+}
+
 .hero-roster__grid {
   display: grid;
   grid-template-columns: repeat(8, minmax(140px, 1fr));
