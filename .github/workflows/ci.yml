@@ -1,12 +1,16 @@
 name: Dungeon Cards CI
 
 on:
-  pull_request:
   push:
     branches-ignore: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: dungeon-cards-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test-build:
