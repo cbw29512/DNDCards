@@ -1,0 +1,29 @@
+name: Dungeon Cards CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run regression suite
+        run: npm test
+      - name: Build production artifact
+        run: npm run build
+      - name: Verify clean site artifact
+        run: |
+          test -f _site/index.html
+          test -f _site/src/main.js
+          test -f _site/build-info.json
+          test ! -e _site/.github
+          test ! -e _site/scripts
