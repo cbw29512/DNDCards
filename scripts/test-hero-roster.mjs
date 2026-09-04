@@ -11,15 +11,16 @@ try {
     "Veyra Emberborn", "Orryn Scaleheart", "Nyx Cinderveil", "Vale Nightglass"
   ]);
 
-  assert.equal((view.match(/<article>/g) || []).length, rosterNames.length);
+  assert.equal((view.match(/<article role="button"/g) || []).length, rosterNames.length);
+  assert.equal((view.match(/data-action="open-pregen-pack"/g) || []).length, rosterNames.length);
+  assert.equal((view.match(/tabindex="0"/g) || []).length, rosterNames.length);
   assert.equal((view.match(/loading="lazy"/g) || []).length, rosterNames.length);
 
   for (const name of rosterNames) {
-    assert.equal(
-      (view.match(new RegExp(name, "g")) || []).length,
-      2,
-      `${name} should appear once in image alt text and once in its title.`
-    );
+    const starter = characters.find(card => card.title === `${name} · Level 3`);
+    assert.ok(starter, `${name} should have a Level 3 starter card.`);
+    assert.match(view, new RegExp(`data-id="${starter.id}"`));
+    assert.match(view, new RegExp(`<h3>${name}</h3>`));
     assert.equal(
       characters.filter(card =>
         card.title.startsWith(`${name} · Level `) && card.art
