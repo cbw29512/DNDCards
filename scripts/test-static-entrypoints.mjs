@@ -9,6 +9,8 @@ const html = readFileSync(join(rootDir, "index.html"), "utf8");
 
 assert.match(html, /<div id="app"><\/div>/, "index.html must expose the app mount point");
 assert.match(html, /src="src\/main\.js[^\"]*"/, "index.html must load src/main.js");
+assert.match(html, /https:\/\/www\.buymeacoffee\.com\/divclass016/, "public site must keep the Buy Me a Coffee support link");
+assert.match(html, /rel="noopener noreferrer"/, "external support link must use safe rel attributes");
 
 const references = [...html.matchAll(/(?:href|src)="([^"#]+)"/g)]
   .map(match => match[1])
@@ -19,4 +21,4 @@ const references = [...html.matchAll(/(?:href|src)="([^"#]+)"/g)]
 const missing = references.filter(reference => !existsSync(join(rootDir, reference)));
 assert.deepEqual(missing, [], `index.html references missing local assets: ${missing.join(", ")}`);
 
-console.log(`Static entrypoint contract passed (${references.length} local assets checked).`);
+console.log(`Static entrypoint contract passed (${references.length} local assets checked + support link verified).`);
