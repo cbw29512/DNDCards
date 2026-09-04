@@ -34,6 +34,17 @@ try {
   }
   assert.equal(state.adventureComplete, true);
 
+  const starter = updateState(loadState(), { type:"launch-starter" });
+  assert.equal(starter.screen, "table");
+  assert.equal(starter.mode, "dm");
+  assert.equal(starter.boardPerspective, "dm");
+  assert.deepEqual(starter.identity, { role:"dm", name:"Demo DM" });
+  assert.equal(starter.adventureId, "first-chime-hearthglow");
+  assert.equal(starter.roomId, "lanternhome");
+  assert.equal(starter.tableTab, "board");
+  assert.deepEqual(starter.revealedIds, []);
+  assert.deepEqual(starter.placedByRoom.lanternhome, ["LOC-005", "NPC-001"]);
+
   localStorage.value = JSON.stringify({
     players:[
       { id:"player-preview", name:"Player Preview", characterId:"pc-wendy", backpackIds:[] },

@@ -1,0 +1,10 @@
+{
+  "name": "dungeon-cards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/run-tests.mjs",
+    "build": "node scripts/build-site.mjs",
+    "check": "npm test && npm run build"
+  }
+}
