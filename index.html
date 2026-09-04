@@ -19,9 +19,36 @@
   <link rel="stylesheet" href="rpg.css?v=high-contrast-2">
   <link rel="stylesheet" href="pregen-pack.css?v=rules-ui-audit-1">
   <link rel="stylesheet" href="audit-polish.css?v=rules-ui-audit-1">
+  <style>
+    .site-support-link {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 120;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      min-height: 44px;
+      padding: .7rem 1rem;
+      border: 1px solid #f0cb67;
+      border-radius: 999px;
+      color: #24172a;
+      background: #f0cb67;
+      box-shadow: 0 10px 28px #0007;
+      font-weight: 900;
+      text-decoration: none;
+    }
+    .site-support-link:hover { transform: translateY(-2px); }
+    .site-support-link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    @media (max-width: 620px) {
+      .site-support-link { right: .65rem; bottom: .65rem; padding: .62rem .8rem; font-size: .82rem; }
+    }
+    @media print { .site-support-link { display: none !important; } }
+  </style>
 </head>
 <body>
   <div id="app"></div>
+  <a class="site-support-link" href="https://www.buymeacoffee.com/divclass016" target="_blank" rel="noopener noreferrer" aria-label="Support Dungeon Cards on Buy Me a Coffee">☕ Buy me a coffee</a>
   <script type="module" src="src/main.js?v=rules-ui-audit-1"></script>
 </body>
 </html>
